@@ -32,15 +32,7 @@ export default defineConfig(({ mode, command }) => {
         : undefined;
 
     return {
-      plugins: [
-        honox({
-          devServer: {
-            // injectClientScript: false //Experiment with this
-            adapter: devAdapter,
-          },
-        }),
-        pages(),
-      ],
+      plugins: [honox(), pages()],
     };
   }
 });
