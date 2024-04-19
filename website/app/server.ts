@@ -3,6 +3,7 @@ import { createApp } from "honox/server";
 
 const app = createApp();
 
-showRoutes(app);
+// TODO: Fix type from generation
+showRoutes(app as any);
 
 export default app;

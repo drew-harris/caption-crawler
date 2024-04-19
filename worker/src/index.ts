@@ -17,6 +17,7 @@ export default {
     env: Env,
     ctx: ExecutionContext,
   ): Promise<Response> {
+    console.log(`got request on path: ${request.url}`);
     await env.kv.put("tes", "tes");
     return new Response("Hello World");
   },

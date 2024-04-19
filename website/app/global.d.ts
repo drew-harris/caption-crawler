@@ -6,11 +6,7 @@ type Head = {
 
 declare module "hono" {
   interface Env {
-    Variables: {};
-    Bindings: {
-      kv: KVNamespace;
-      playlistQueue: Queue;
-    };
+    Bindings: GenEnv;
   }
   interface ContextRenderer {
     (
