@@ -5,7 +5,9 @@ import client from "honox/vite/client";
 import { defineConfig } from "vite";
 import { getPlatformProxy } from "wrangler";
 
-export default defineConfig(({ mode, command }) => {
+export default defineConfig(async ({ mode, command }) => {
+  const proxy = await getPlatformProxy();
+  console.log(proxy.env);
   if (mode === "client") {
     return {
       plugins: [client()],
@@ -32,7 +34,15 @@ export default defineConfig(({ mode, command }) => {
         : undefined;
 
     return {
-      plugins: [honox(), pages()],
+      plugins: [
+        honox({
+          devServer: {
+            // injectClientScript: false //Experiment with this
+            adapter: devAdapter,
+          },
+        }),
+        pages(),
+      ],
     };
   }
 });

@@ -3,11 +3,11 @@ import Counter from "../islands/counter";
 
 export default createRoute(async (c) => {
   const name = c.req.query("name") ?? "Hono";
-  c.env.playlistQueue.send({
-    test: "message",
-  });
+  // c.env.playlistQueue.send({
+  //   test: "message",
+  // });
 
-  // const result = await c.env.kv.get("tes");
+  const result = await c.env.kv.get("tes");
   // const webResponse = await c.env.worker.fetch("https://lsijef.com/log");
   // console.log(webResponse.status);
 
