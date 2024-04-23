@@ -8,6 +8,13 @@
       "when": 1713830733579,
       "tag": "0000_optimal_baron_strucker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1713840941436,
+      "tag": "0001_closed_phantom_reporter",
+      "breakpoints": true
     }
   ]
 }

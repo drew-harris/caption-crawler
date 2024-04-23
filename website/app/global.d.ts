@@ -5,6 +5,13 @@ type Head = {
   title?: string;
 };
 
+type User = {
+  id: string;
+  isGoogle: boolean;
+  isPro: boolean;
+  createdAt: Date;
+};
+
 declare module "hono" {
   interface Env {
     Bindings: {
@@ -18,6 +25,7 @@ declare module "hono" {
     Variables: {
       db: DrizzleD1Database;
       auth: ReturnType<typeof createAuth>;
+      user: User;
     };
   }
 
@@ -32,5 +40,12 @@ declare module "hono" {
 declare module "lucia" {
   interface Register {
     Lucia: ReturnType<typeof createAuth>;
+    DatabaseUserAttributes: DatabaseUserAttributes;
   }
+}
+
+interface DatabaseUserAttributes {
+  isGoogle: boolean;
+  createdAt: Date;
+  isPro: boolean;
 }

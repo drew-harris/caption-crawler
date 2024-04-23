@@ -14,7 +14,8 @@
     "drizzle-orm": "^0.30.9",
     "hono": "^4.2.3",
     "honox": "^0.1.14",
-    "lucia": "^3.1.1"
+    "lucia": "^3.1.1",
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240405.0",
