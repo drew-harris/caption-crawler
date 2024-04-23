@@ -9,8 +9,12 @@
   },
   "private": true,
   "dependencies": {
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
+    "db": "workspace:*",
+    "drizzle-orm": "^0.30.9",
     "hono": "^4.2.3",
-    "honox": "^0.1.14"
+    "honox": "^0.1.14",
+    "lucia": "^3.1.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240405.0",
