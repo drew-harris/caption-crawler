@@ -1,3 +1,6 @@
+/// <reference types="typed-htmx" />
+import "typed-htmx";
+
 import { DrizzleD1Database } from "drizzle-orm/d1";
 import { createAuth } from "./auth";
 
@@ -48,4 +51,10 @@ interface DatabaseUserAttributes {
   isGoogle: boolean;
   createdAt: Date;
   isPro: boolean;
+}
+
+declare global {
+  namespace Hono {
+    interface HTMLAttributes extends HtmxAttributes {}
+  }
 }

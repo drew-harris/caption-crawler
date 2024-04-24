@@ -9,10 +9,11 @@
       "DOM"
     ],
     "types": [
+      "typed-htmx",
       "vite/client",
       "@cloudflare/workers-types"
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"
-  },
+  }
 }
