@@ -1,4 +1,3 @@
-/// <reference types="typed-htmx" />
 import "typed-htmx";
 
 import { DrizzleD1Database } from "drizzle-orm/d1";
