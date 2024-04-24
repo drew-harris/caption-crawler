@@ -4,8 +4,6 @@ import { createApp } from "honox/server";
 import { createDb } from "./db";
 import { createAuth } from "./auth";
 import { getCookie, setCookie } from "hono/cookie";
-import { createId } from "./ids";
-import { userTable } from "db";
 import { createNewUser } from "./db/users";
 
 const baseApp = new Hono<Env>();
@@ -17,8 +15,6 @@ baseApp.use("*", async (c, next) => {
   c.set("auth", auth);
   await next();
 });
-
-// If no session, create
 
 // Main auth middleware
 baseApp.use("*", async (c, next) => {
