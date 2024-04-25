@@ -1,7 +1,7 @@
 # Caption Crawler
 
 ## TODOS:
-- [ ] Auth Flow
+- [x] Auth Flow
 - [ ] Set Up Queue
 - [ ] Ingest playlist
 - [ ] Main Site UI
@@ -14,6 +14,7 @@
 
 ## Later:
 - [ ] Auth middleware in separate file
+- [ ] Proper tsconfig monorepo setup
 
 
 ### CC:

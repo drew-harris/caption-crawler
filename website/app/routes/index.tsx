@@ -1,22 +1,10 @@
-import "typed-htmx";
-
 import { createRoute } from "honox/factory";
-import Counter from "../islands/counter";
+import { PlayListSubmitInput } from "../components/PlaylistSubmitInput";
 
 export default createRoute(async (c) => {
-  const name = c.req.query("name") ?? "Hono";
-
   return c.render(
-    <div class="p-3">
-      <button
-        class="p-2 bg-gray-300"
-        hx-swap="outerHTML"
-        preload="mouseover"
-        hx-get="/hx"
-      >
-        Test
-      </button>
+    <div class="p-3 grid place-items-center min-h-screen">
+      <PlayListSubmitInput />
     </div>,
-    { title: name },
   );
 });
