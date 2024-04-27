@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { MessageType, PossibleMessage } from "shared/types";
 
 const app = new Hono<{
   Bindings: {
@@ -27,6 +28,15 @@ export default {
 
     // Handle messages asynchronously
     for (let message of batch.messages) {
+      const data = message.body as PossibleMessage;
+      switch (data.type) {
+        case MessageType.PLAYLIST_INGEST:
+          break;
+        case MessageType.FAKE_MESSAGE:
+          break;
+        default:
+          console.error("Unknown message type", data);
+      }
     }
   },
 };

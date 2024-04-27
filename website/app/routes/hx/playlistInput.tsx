@@ -4,7 +4,7 @@ import { hxRender } from "../../middleware/hxRender";
 import { hxValidate } from "../../validate";
 import { ErrorMsg } from "../../components/ErrorMsg";
 import { getPlaylistDisplayInfo, getPlaylistIdFromUrl } from "shared/yt";
-import { Request } from "@cloudflare/workers-types";
+import { PlaylistIngestMessage } from "shared/types";
 
 const inputSchema = z.object({
   url: z.string().url(),
@@ -28,7 +28,7 @@ export const POST = createRoute(
         body: JSON.stringify({
           type: "playlistIngest",
           playlistId,
-        }),
+        } satisfies PlaylistIngestMessage),
       });
 
       return c.render(

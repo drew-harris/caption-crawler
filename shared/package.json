@@ -10,6 +10,10 @@
     "./yt": {
       "import": "./youtube/index.ts",
       "require": "./youtube/index.ts"
+    },
+    "./types": {
+      "import": "./types.ts",
+      "require": "./types.ts"
     }
   },
   "keywords": [],
