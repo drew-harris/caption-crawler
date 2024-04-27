@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { MessageType, PossibleMessage } from "shared/types";
+import { handlePlaylistIngest } from "./handlePlaylistIngest";
 
 const app = new Hono<{
   Bindings: {
@@ -27,16 +28,21 @@ export default {
     let messages = JSON.stringify(batch.messages);
 
     // Handle messages asynchronously
-    for (let message of batch.messages) {
+    let promises = batch.messages.map(async (message) => {
       const data = message.body as PossibleMessage;
       switch (data.type) {
         case MessageType.PLAYLIST_INGEST:
+          const result = handlePlaylistIngest(message, data, env);
+          return result;
           break;
         case MessageType.FAKE_MESSAGE:
           break;
         default:
           console.error("Unknown message type", data);
       }
-    }
+    });
+
+    const results = await Promise.all(promises);
+    console.log("Results", results);
   },
 };
