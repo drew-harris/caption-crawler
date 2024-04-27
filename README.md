@@ -20,5 +20,3 @@
 ### CC:
 - [ ] Set up ElasticSearch
 - [ ] Deploy on drewh enterprises
-
-
