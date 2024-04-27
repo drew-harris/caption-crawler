@@ -3,6 +3,7 @@ import { z } from "zod";
 import { hxRender } from "../../middleware/hxRender";
 import { hxValidate } from "../../validate";
 import { ErrorMsg } from "../../components/ErrorMsg";
+import { getPlaylistIdFromUrl } from "shared/yt";
 
 const inputSchema = z.object({
   url: z.string().url(),
@@ -15,8 +16,11 @@ export const POST = createRoute(
   async (c) => {
     try {
       const { url } = await c.req.valid("form");
-      return c.render(<div>Testing</div>);
+      const playlistId = getPlaylistIdFromUrl(url);
+
+      return c.render(<div>{playlistId}</div>);
     } catch (e) {
+      console.log(e);
       return c.render(
         <ErrorMsg>There was an error processing your playlist</ErrorMsg>,
       );
