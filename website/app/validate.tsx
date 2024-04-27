@@ -1,5 +1,6 @@
 import { ZodSchema } from "zod";
 import { validator } from "hono/validator";
+import { ErrorMsg } from "./components/ErrorMsg";
 
 type InputType =
   | "form"
@@ -15,9 +16,7 @@ export const hxValidate = (type: InputType, schema: ZodSchema) => {
     const parsed = schema.safeParse(value);
     if (!parsed.success) {
       return c.render(
-        <div class="bg-red-200 p-2 border border-red-500">
-          There was an error submitting data.
-        </div>,
+        <ErrorMsg>There was an error validating the request.</ErrorMsg>,
       );
     }
     return parsed.data;

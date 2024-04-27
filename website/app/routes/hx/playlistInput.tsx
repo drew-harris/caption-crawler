@@ -1,9 +1,8 @@
 import { createRoute } from "honox/factory";
-import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { hxRender } from "../../middleware/hxRender";
-import { validator } from "hono/validator";
 import { hxValidate } from "../../validate";
+import { ErrorMsg } from "../../components/ErrorMsg";
 
 const inputSchema = z.object({
   url: z.string().url(),
@@ -19,7 +18,7 @@ export const POST = createRoute(
       return c.render(<div>Testing</div>);
     } catch (e) {
       return c.render(
-        <div>There was an error processing the playlist. Please try later</div>,
+        <ErrorMsg>There was an error processing your playlist</ErrorMsg>,
       );
     }
   },
