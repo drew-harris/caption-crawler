@@ -1,15 +1,32 @@
+import { Hono } from "hono";
+
+const app = new Hono<{
+  Bindings: {
+    kv: KVNamespace;
+    ELASTIC_NODE: string;
+    ELASTIC_PASSWORD: string;
+    playlistQueue: Queue;
+  };
+}>();
+
+app.get("/", async (c) => {
+  c.json({ working: true });
+});
+
+app.post("/queue", async (c) => {
+  console.log("queueing", await c.req.json());
+  await c.env.playlistQueue.send(await c.req.json(), {
+    contentType: "json",
+  });
+});
+
 export default {
-  async fetch(
-    request: Request,
-    env: Env,
-    ctx: ExecutionContext,
-  ): Promise<Response> {
-    console.log(`got request on path: ${request.url}`);
-    await env.kv.put("tes", "tes");
-    return new Response("Hello World");
-  },
+  fetch: app.fetch,
   async queue(batch: MessageBatch, env: Env): Promise<void> {
     let messages = JSON.stringify(batch.messages);
-    console.log(`consumed from our queue: ${messages}`);
+
+    // Handle messages asynchronously
+    for (let message of batch.messages) {
+    }
   },
 };

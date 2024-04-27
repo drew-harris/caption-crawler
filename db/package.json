@@ -8,8 +8,8 @@
   },
   "exports": {
     ".": {
-      "import": "./schema.ts",
-      "require": "./schema.ts"
+      "import": "./index.ts",
+      "require": "./index.ts"
     }
   },
   "keywords": [],

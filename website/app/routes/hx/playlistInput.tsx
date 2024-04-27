@@ -4,6 +4,7 @@ import { hxRender } from "../../middleware/hxRender";
 import { hxValidate } from "../../validate";
 import { ErrorMsg } from "../../components/ErrorMsg";
 import { getPlaylistDisplayInfo, getPlaylistIdFromUrl } from "shared/yt";
+import { Request } from "@cloudflare/workers-types";
 
 const inputSchema = z.object({
   url: z.string().url(),
@@ -21,6 +22,15 @@ export const POST = createRoute(
         c.env.YOUTUBE_API_KEY,
         playlistId,
       );
+
+      await c.env.worker.fetch("https://fakeurl/queue", {
+        method: "POST",
+        body: JSON.stringify({
+          type: "playlistIngest",
+          playlistId,
+        }),
+      });
+
       return c.render(
         <div>{playlistInfo.description || playlistInfo.title}</div>,
       );
