@@ -15,6 +15,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@googleapis/youtube": "^15.0.0"
+  },
   "devDependencies": {
     "typescript": "^5.0.4"
   }

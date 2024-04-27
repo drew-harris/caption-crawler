@@ -20,6 +20,7 @@ declare module "hono" {
       kv: KVNamespace;
       ELASTIC_NODE: string;
       ELASTIC_PASSWORD: string;
+      YOUTUBE_API_KEY: string;
       db: D1Database;
       worker: Fetcher;
       playlistQueue: Queue;
