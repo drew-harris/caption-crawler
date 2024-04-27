@@ -1,6 +1,6 @@
 export const PlayListSubmitInput = () => {
   return (
-    <form hx-post="/hx/playlist" hx-swap="none">
+    <form hx-post="/hx/playlistInput" hx-swap="outerHTML">
       <div class="bg-gray-50 p-4 border-gray-500 border">
         <input
           name="url"
