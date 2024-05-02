@@ -11,13 +11,7 @@
         "dist/**"
       ]
     },
-    "serve": {
-      "dependsOn": [
-        "build"
-      ]
-    },
-    "deploy": {
-      "cache": false,
+    "preview": {
       "dependsOn": [
         "build"
       ]

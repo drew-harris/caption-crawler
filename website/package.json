@@ -4,9 +4,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode client && vite build",
-    "preview": "wrangler pages dev",
-    "deploy": "wrangler pages deploy"
+    "preview": "node ./dist/server.mjs"
   },
+  "files": [
+    "dist"
+  ],
   "private": true,
   "dependencies": {
     "@hono/node-server": "^1.11.1",
