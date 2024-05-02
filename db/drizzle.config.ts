@@ -1,11 +1,13 @@
 import { defineConfig } from "drizzle-kit";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default defineConfig({
   schema: "./schema.ts",
   out: "migrations",
-  driver: "d1",
+  driver: "pg",
+  verbose: true,
   dbCredentials: {
-    wranglerConfigPath: "./wrangler.toml",
-    dbName: "cc-db",
+    connectionString: process.env.DATABASE_URL!,
   },
 });

@@ -1,10 +1,10 @@
-import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
+import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { Lucia, TimeSpan } from "lucia";
-import { DrizzleD1Database } from "drizzle-orm/d1";
-import { sessionTable, userTable } from "db";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { TB_sessions, TB_users } from "db";
 
-export const createAuth = (db: DrizzleD1Database) => {
-  const adapter = new DrizzleSQLiteAdapter(db, sessionTable, userTable);
+export const createAuth = (db: PostgresJsDatabase) => {
+  const adapter = new DrizzlePostgreSQLAdapter(db, TB_sessions, TB_users);
   const lucia = new Lucia(adapter, {
     sessionExpiresIn: new TimeSpan(9, "w"),
     getUserAttributes(databaseUserAttributes) {

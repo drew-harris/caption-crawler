@@ -1,10 +1,10 @@
-import { userTable } from "db";
-import { DrizzleD1Database } from "drizzle-orm/d1";
+import { TB_users } from "db";
 import { createId } from "../ids";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
-export const createNewUser = async (db: DrizzleD1Database) => {
+export const createNewUser = async (db: PostgresJsDatabase) => {
   const user = await db
-    .insert(userTable)
+    .insert(TB_users)
     .values([
       {
         id: createId("user"),

@@ -1,13 +1,11 @@
-import pages from "@hono/vite-cloudflare-pages";
 import honox from "honox/vite";
-import adapter from "@hono/vite-dev-server/cloudflare";
 import client from "honox/vite/client";
-import { defineConfig } from "vite";
-import { getPlatformProxy } from "wrangler";
+import { defineConfig, loadEnv } from "vite";
+import nodeServerPlugin from "./nodeServerPlugin";
 
-export default defineConfig(async ({ mode, command }) => {
-  const proxy = await getPlatformProxy();
-  console.log(proxy.env);
+export default defineConfig(({ mode, command }) => {
+  // const env = loadEnv(mode, ".");
+
   if (mode === "client") {
     return {
       plugins: [client()],
@@ -22,27 +20,24 @@ export default defineConfig(async ({ mode, command }) => {
       },
     };
   } else {
-    const devAdapter =
-      command == "serve"
-        ? adapter({
-            proxy: {
-              persist: {
-                path: "../worker/.wrangler/state/v3",
-              },
-            },
-          })
-        : undefined;
-
     return {
-      plugins: [
-        honox({
-          devServer: {
-            // injectClientScript: false //Experiment with this
-            adapter: devAdapter,
-          },
-        }),
-        pages(),
-      ],
+      clearScreen: false,
+      plugins: [honox(), nodeServerPlugin()],
+      // define: {
+      //   ...Object.keys(env).reduce((prev, key) => {
+      //     // @ts-ignore
+      //     prev[`process.env.${key}`] = JSON.stringify(env[key]);
+      //     return prev;
+      //   }, {}),
+      // },
+      ssr: {
+        // postgres
+        external: ["pg", "drizzle-orm/node-postgres", "dotenv"],
+        target: "node",
+        optimizeDeps: {
+          include: ["drizzle-orm/node-postgres"],
+        },
+      },
     };
   }
 });

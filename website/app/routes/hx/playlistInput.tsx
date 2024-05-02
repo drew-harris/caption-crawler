@@ -5,6 +5,7 @@ import { hxValidate } from "../../validate";
 import { ErrorMsg } from "../../components/ErrorMsg";
 import { getPlaylistDisplayInfo, getPlaylistIdFromUrl } from "shared/yt";
 import { MessageType, PlaylistIngestMessage } from "shared/types";
+import { env } from "../../env";
 
 const inputSchema = z.object({
   url: z.string().url(),
@@ -19,17 +20,17 @@ export const POST = createRoute(
       const { url } = c.req.valid("form");
       const playlistId = getPlaylistIdFromUrl(url);
       const playlistInfo = await getPlaylistDisplayInfo(
-        c.env.YOUTUBE_API_KEY,
+        env.YOUTUBE_API_KEY,
         playlistId,
       );
 
-      await c.env.worker.fetch("https://fakeurl/queue", {
-        method: "POST",
-        body: JSON.stringify({
-          type: MessageType.PLAYLIST_INGEST,
-          playlistId,
-        } satisfies PlaylistIngestMessage),
-      });
+      // ADD TO QUEUE
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     type: MessageType.PLAYLIST_INGEST,
+      //     playlistId,
+      //   } satisfies PlaylistIngestMessage),
+      // });
 
       return c.render(
         <div>{playlistInfo.description || playlistInfo.title}</div>,

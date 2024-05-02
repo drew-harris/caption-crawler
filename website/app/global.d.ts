@@ -1,6 +1,6 @@
 import "typed-htmx";
 
-import { DrizzleD1Database } from "drizzle-orm/d1";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { createAuth } from "./auth";
 
 type Head = {
@@ -16,17 +16,8 @@ type User = {
 
 declare module "hono" {
   interface Env {
-    Bindings: {
-      kv: KVNamespace;
-      ELASTIC_NODE: string;
-      ELASTIC_PASSWORD: string;
-      YOUTUBE_API_KEY: string;
-      db: D1Database;
-      worker: Fetcher;
-      playlistQueue: Queue;
-    };
     Variables: {
-      db: DrizzleD1Database;
+      db: PostgresJsDatabase;
       auth: ReturnType<typeof createAuth>;
       user: User;
     };

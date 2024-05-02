@@ -1,15 +1,19 @@
+import "dotenv/config";
 import { showRoutes } from "hono/dev";
 import { Env, Hono } from "hono";
 import { createApp } from "honox/server";
-import { createDb } from "db";
-import { createAuth } from "./auth";
 import { authMiddleware } from "./auth/middleware";
+import { env } from "./env";
+import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { createAuth } from "./auth";
 
 const baseApp = new Hono<Env>();
+const queryClient = postgres(env.DATABASE_URL);
+const db = drizzle(queryClient);
+const auth = createAuth(db);
 
 baseApp.use("*", async (c, next) => {
-  const db = createDb(c.env.db);
-  const auth = createAuth(db);
   c.set("db", db);
   c.set("auth", auth);
   await next();

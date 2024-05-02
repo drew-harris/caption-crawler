@@ -1,16 +1,19 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
 
-export const userTable = sqliteTable("user", {
-  id: text("id").notNull().primaryKey(),
-  isGoogle: integer("is_google", { mode: "boolean" }).default(false).notNull(),
-  isPro: integer("is_pro", { mode: "boolean" }).default(false).notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+export const TB_users = pgTable("user", {
+  id: text("id").primaryKey(),
+  isGoogle: boolean("is_google").default(false).notNull(),
+  isPro: boolean("is_pro").default(false).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull(),
 });
 
-export const sessionTable = sqliteTable("session", {
-  id: text("id").notNull().primaryKey(),
+export const TB_sessions = pgTable("session", {
+  id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id),
-  expiresAt: integer("expires_at").notNull(),
+    .references(() => TB_users.id),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
 });
