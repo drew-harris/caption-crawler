@@ -4,7 +4,7 @@ import { hxRender } from "../../middleware/hxRender";
 import { hxValidate } from "../../validate";
 import { ErrorMsg } from "../../components/ErrorMsg";
 import { getPlaylistDisplayInfo, getPlaylistIdFromUrl } from "shared/yt";
-import { PlaylistIngestMessage } from "shared/types";
+import { MessageType, PlaylistIngestMessage } from "shared/types";
 
 const inputSchema = z.object({
   url: z.string().url(),
@@ -26,7 +26,7 @@ export const POST = createRoute(
       await c.env.worker.fetch("https://fakeurl/queue", {
         method: "POST",
         body: JSON.stringify({
-          type: "playlistIngest",
+          type: MessageType.PLAYLIST_INGEST,
           playlistId,
         } satisfies PlaylistIngestMessage),
       });
