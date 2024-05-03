@@ -4,7 +4,8 @@ import { defineConfig, loadEnv } from "vite";
 import nodeServerPlugin from "./nodeServerPlugin";
 
 export default defineConfig(({ mode, command }) => {
-  // const env = loadEnv(mode, ".");
+  const env = loadEnv(mode, ".");
+  console.log(env);
 
   if (mode === "client") {
     return {
@@ -31,8 +32,16 @@ export default defineConfig(({ mode, command }) => {
       //   }, {}),
       // },
       ssr: {
+        define: {
+          ...Object.keys(env).reduce((prev, key) => {
+            // @ts-ignore
+            prev[`process.env.${key}`] = JSON.stringify(env[key]);
+            return prev;
+          }, {}),
+        },
+
         // postgres
-        external: ["pg", "drizzle-orm/node-postgres", "dotenv"],
+        external: ["pg", "drizzle-orm/node-postgres", "dotenv", "bullmq"],
         target: "node",
         optimizeDeps: {
           include: ["drizzle-orm/node-postgres"],

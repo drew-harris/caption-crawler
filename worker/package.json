@@ -9,8 +9,6 @@
     "preview": "node ./dist/index.js"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.1.0",
-    "@cloudflare/workers-types": "^4.20240405.0",
     "esbuild": "^0.20.2",
     "esbuild-register": "^3.5.0",
     "nodemon": "^3.1.0",
@@ -19,8 +17,12 @@
     "wrangler": "^3.0.0"
   },
   "dependencies": {
+    "@t3-oss/env-core": "^0.10.1",
     "@types/node": "^20.12.8",
+    "bullmq": "^5.7.8",
+    "dotenv": "^16.4.5",
     "hono": "^4.2.3",
-    "shared": "workspace:*"
+    "shared": "workspace:*",
+    "zod": "^3.23.4"
   }
 }

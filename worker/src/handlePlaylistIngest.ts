@@ -1,11 +1,7 @@
-import { PlaylistIngestMessage } from "shared/types";
+import { Job } from "bullmq";
+import { PossibleJob } from "shared/types";
 
-export const handlePlaylistIngest = async (
-  message: Message<unknown>,
-  data: PlaylistIngestMessage,
-  env: Env,
-) => {
-  console.log("handling playlist ingest", data.playlistId);
+export const handlePlaylistIngest = async (job: Job<PossibleJob>) => {
   // Steps to ingest a playlist
   return message;
 };

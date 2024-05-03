@@ -1,4 +1,10 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const TB_users = pgTable("user", {
   id: text("id").primaryKey(),
@@ -16,4 +22,25 @@ export const TB_sessions = pgTable("session", {
     withTimezone: true,
     mode: "date",
   }).notNull(),
+});
+
+export const TB_playlists = pgTable("playlist", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  originalUrl: text("original_url").notNull().unique(),
+  channelId: text("channel_id").notNull(),
+  channelTitle: text("channel_title").notNull(),
+  thumbnailUrl: text("thumbnail_url").notNull(),
+  description: text("description").notNull(),
+});
+
+export const TB_videos = pgTable("video", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => TB_users.id),
+  playlistId: text("playlist_id")
+    .notNull()
+    .references(() => TB_playlists.id),
 });

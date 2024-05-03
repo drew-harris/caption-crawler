@@ -4,7 +4,6 @@ import { hxRender } from "../../middleware/hxRender";
 import { hxValidate } from "../../validate";
 import { ErrorMsg } from "../../components/ErrorMsg";
 import { getPlaylistDisplayInfo, getPlaylistIdFromUrl } from "shared/yt";
-import { MessageType, PlaylistIngestMessage } from "shared/types";
 import { env } from "../../env";
 
 const inputSchema = z.object({
@@ -23,14 +22,6 @@ export const POST = createRoute(
         env.YOUTUBE_API_KEY,
         playlistId,
       );
-
-      // ADD TO QUEUE
-      //   method: "POST",
-      //   body: JSON.stringify({
-      //     type: MessageType.PLAYLIST_INGEST,
-      //     playlistId,
-      //   } satisfies PlaylistIngestMessage),
-      // });
 
       return c.render(
         <div>{playlistInfo.description || playlistInfo.title}</div>,

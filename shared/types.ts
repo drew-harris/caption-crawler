@@ -1,20 +1,20 @@
-export enum MessageType {
+export enum JobType {
   PLAYLIST_INGEST = "playlistIngest",
   FAKE_MESSAGE = "fakeMessage",
 }
 
-type BaseMessage = {
-  type: MessageType;
+type BaseJob = {
+  type: JobType;
 };
 
-export type PlaylistIngestMessage = BaseMessage & {
-  type: MessageType.PLAYLIST_INGEST;
+export type PlaylistIngestJob = BaseJob & {
+  type: JobType.PLAYLIST_INGEST;
   playlistId: string;
 };
 
-export type FakeMessage = BaseMessage & {
+export type FakeJob = BaseJob & {
   color: string;
-  type: MessageType.FAKE_MESSAGE;
+  type: JobType.FAKE_MESSAGE;
 };
 
-export type PossibleMessage = PlaylistIngestMessage | FakeMessage;
+export type PossibleJob = PlaylistIngestJob | FakeJob;
