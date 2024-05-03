@@ -4,7 +4,7 @@ import { PossibleJob } from "shared/types";
 import { env } from "./env";
 
 const playlistIngestWorker = new Worker<PossibleJob>(
-  "ingestQueue",
+  env.QUEUE_NAME,
   async (job) => {
     console.log(job.data);
     console.log(job.timestamp);

@@ -8,14 +8,14 @@ import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { createAuth } from "./auth";
 import { Queue } from "bullmq";
-import { PossibleMessage } from "shared/types";
+import { PossibleJob } from "shared/types";
 
 const baseApp = new Hono<Env>();
 const queryClient = postgres(env.DATABASE_URL);
 const db = drizzle(queryClient);
 const auth = createAuth(db);
 
-const ingestQueue = new Queue<PossibleMessage>("ingestQueue", {
+const ingestQueue = new Queue<PossibleJob>(env.QUEUE_NAME, {
   connection: {
     host: env.REDIS_HOST,
     password: env.REDIS_PASSWORD,

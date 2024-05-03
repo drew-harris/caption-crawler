@@ -1,15 +1,9 @@
 {
-  "name": "cloudflare-worker-honox-pair",
+  "name": "caption-crawler",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
-  "workspaces": {
-    "packages": [
-      "./server/",
-      "./worker/"
-    ]
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "turbo dev",
