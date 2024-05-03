@@ -43,3 +43,13 @@ jobs:
           push: true
           tags: ${{secrets.DOCKERHUB_USERNAME}}/ccworker:latest
 
+  notify-watchtower:
+    needs: [build-website, build-worker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://watchtower.drewh.net/v1/update'
+          method: 'GET'
+          customHeaders: '{"Authorization": "Bearer ${{secrets.WATCHTOWER_KEY}}"}'
