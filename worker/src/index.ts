@@ -1,6 +1,7 @@
+import { Job, Worker } from "bullmq";
 import "dotenv/config";
-import { Job, Worker, tryCatch } from "bullmq";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import {
   CreatedPlaylist,
   JobType,
@@ -9,8 +10,6 @@ import {
 } from "shared/types";
 import { Client as TSClient } from "typesense";
 import { env } from "./env";
-import { Pool } from "pg";
-import { drizzle } from "drizzle-orm/node-postgres";
 
 import { handlePlaylistIngest } from "./handlePlaylistIngest";
 

@@ -31,7 +31,7 @@ export function getVideoInsert(video: VideoInput): VideoInsert {
 export async function addVideoToTypesense(video: VideoInput, deps: Deps) {
   // Get the words from the video id
   const words = await getWordsFromVideoId(video.id);
-  const collapsedWords = await collapseWords(words, 8);
+  const collapsedWords = collapseWords(words, 8);
 
   await deps.typesense
     .collections(video.playlistId)

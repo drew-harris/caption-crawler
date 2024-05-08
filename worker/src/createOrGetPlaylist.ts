@@ -1,6 +1,3 @@
-// Returns
-// Created playlist AND string[] of episodes
-
 import { Job } from "bullmq";
 import { TB_playlists, TB_videos } from "db";
 import { eq } from "drizzle-orm";
