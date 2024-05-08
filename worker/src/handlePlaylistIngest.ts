@@ -1,11 +1,11 @@
 import { Job } from "bullmq";
-import { CreatedPlaylist, PlaylistIngestJob, PossibleJob } from "shared/types";
-import { Deps } from ".";
-import { createOrGetPlaylist } from "./createOrGetPlaylist";
-import { getVideosFromPlaylist } from "./captions";
-import { getVideoInsert, handleVideo } from "./videos";
 import { TB_videos } from "db";
+import { CreatedPlaylist, PlaylistIngestJob } from "shared/types";
+import { Deps } from ".";
+import { getVideosFromPlaylist } from "./captions";
+import { createOrGetPlaylist } from "./createOrGetPlaylist";
 import { createIndexIfNotExist } from "./searching";
+import { handleVideo } from "./videos";
 
 export const handlePlaylistIngest = async (
   job: Job<PlaylistIngestJob, CreatedPlaylist>,

@@ -2,11 +2,11 @@
 // Created playlist AND string[] of episodes
 
 import { Job } from "bullmq";
-import { CreatedPlaylist, PlaylistIngestJob } from "shared/types";
-import { Deps, db } from ".";
-import { getPlaylistDisplayInfo } from "shared/yt";
 import { TB_playlists, TB_videos } from "db";
 import { eq } from "drizzle-orm";
+import { CreatedPlaylist, PlaylistIngestJob } from "shared/types";
+import { getPlaylistDisplayInfo } from "shared/yt";
+import { Deps } from ".";
 import { env } from "./env";
 
 export async function createOrGetPlaylist(
@@ -15,7 +15,7 @@ export async function createOrGetPlaylist(
 ): Promise<[CreatedPlaylist, string[]]> {
   console.log("Creating or getting playlist");
   // Check database for playlist
-  const possiblePlaylist = await db
+  const possiblePlaylist = await deps.db
     .select()
     .from(TB_playlists)
     .where(eq(TB_playlists.id, job.data.playlistId))
