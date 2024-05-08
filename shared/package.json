@@ -7,6 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "exports": {
+    ".": {
+      "import": "./index.ts",
+      "require": "./index.ts"
+    },
     "./yt": {
       "import": "./youtube/index.ts",
       "require": "./youtube/index.ts"
@@ -20,7 +24,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@googleapis/youtube": "^15.0.0"
+    "@googleapis/youtube": "^15.0.0",
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "typescript": "^5.0.4"

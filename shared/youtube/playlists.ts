@@ -30,7 +30,6 @@ export const getPlaylistDisplayInfo = async (
   );
 
   if (!response.ok) {
-    console.log(await response.text());
     throw new Error("Got bad response from youtube api");
   }
 

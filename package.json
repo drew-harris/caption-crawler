@@ -9,7 +9,8 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "deploy": "turbo deploy",
-    "preview": "turbo preview"
+    "preview": "turbo preview",
+    "typecheck": "turbo typecheck"
   },
   "keywords": [],
   "author": "",

@@ -2,9 +2,6 @@ import { jsxRenderer } from "hono/jsx-renderer";
 import { Script } from "honox/server";
 
 export default jsxRenderer(({ children, title }, context) => {
-  if (context.req.path.includes("/hx")) {
-    return <>{children}</>;
-  }
   return (
     <html lang="en">
       <head>

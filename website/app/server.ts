@@ -1,5 +1,4 @@
 import "dotenv/config";
-import { showRoutes } from "hono/dev";
 import { Env, Hono } from "hono";
 import { createApp } from "honox/server";
 import { authMiddleware } from "./auth/middleware";
@@ -37,6 +36,9 @@ const app = createApp<Env>({
   app: baseApp,
 });
 
-showRoutes(app);
+// TODO: Error handling middleware
+// app.onError...
+
+// showRoutes(app);
 
 export default app;

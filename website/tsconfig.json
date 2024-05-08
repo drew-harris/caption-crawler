@@ -11,9 +11,9 @@
     "types": [
       "typed-htmx",
       "vite/client",
-      "@cloudflare/workers-types"
     ],
     "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx"
+    "jsxImportSource": "hono/jsx",
+    "skipLibCheck": true,
   }
 }

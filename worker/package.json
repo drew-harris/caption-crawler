@@ -6,9 +6,12 @@
     "build-old": "tsc",
     "build": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
     "dev": "nodemon --exec \"node -r esbuild-register ./src/index.ts\" -e .ts",
-    "preview": "node ./dist/index.js"
+    "preview": "node ./dist/index.js",
+    "tsnode": "ts-node src/index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.6",
     "esbuild": "^0.20.2",
     "esbuild-register": "^3.5.0",
     "nodemon": "^3.1.0",
@@ -17,12 +20,19 @@
     "wrangler": "^3.0.0"
   },
   "dependencies": {
+    "@googleapis/youtube": "^10.0.0",
     "@t3-oss/env-core": "^0.10.1",
     "@types/node": "^20.12.8",
     "bullmq": "^5.7.8",
+    "db": "workspace:*",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.9",
     "hono": "^4.2.3",
+    "pg": "^8.11.5",
+    "postgres": "^3.4.4",
     "shared": "workspace:*",
+    "ts-node": "^10.9.2",
+    "typesense": "^1.8.2",
     "zod": "^3.23.4"
   }
 }

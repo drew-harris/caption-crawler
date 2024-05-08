@@ -1,11 +1,12 @@
 import { customAlphabet } from "nanoid";
-export const nanoid = customAlphabet(
+const nanoid = customAlphabet(
   "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
 );
 
 const prefixes = {
   user: "us",
   jobs: "job",
+  content: "c",
 } as const;
 
 export function createId(prefix: keyof typeof prefixes): string {

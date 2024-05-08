@@ -4,6 +4,7 @@ import {
   timestamp,
   boolean,
   varchar,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const TB_users = pgTable("user", {
@@ -17,7 +18,10 @@ export const TB_sessions = pgTable("session", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
-    .references(() => TB_users.id),
+    .references(() => TB_users.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
   expiresAt: timestamp("expires_at", {
     withTimezone: true,
     mode: "date",
@@ -27,11 +31,15 @@ export const TB_sessions = pgTable("session", {
 export const TB_playlists = pgTable("playlist", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
+  description: text("description"),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => TB_users.id),
   originalUrl: text("original_url").notNull().unique(),
   channelId: text("channel_id").notNull(),
   channelTitle: text("channel_title").notNull(),
   thumbnailUrl: text("thumbnail_url").notNull(),
-  description: text("description").notNull(),
+  videoCount: integer("video_count").notNull(),
 });
 
 export const TB_videos = pgTable("video", {
@@ -42,5 +50,8 @@ export const TB_videos = pgTable("video", {
     .references(() => TB_users.id),
   playlistId: text("playlist_id")
     .notNull()
-    .references(() => TB_playlists.id),
+    .references(() => TB_playlists.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
 });

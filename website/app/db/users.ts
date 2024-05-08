@@ -1,6 +1,6 @@
 import { TB_users } from "db";
-import { createId } from "../ids";
 import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { createId } from "shared";
 
 export const createNewUser = async (db: PostgresJsDatabase) => {
   const user = await db

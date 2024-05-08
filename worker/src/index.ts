@@ -1,16 +1,64 @@
 import "dotenv/config";
-import { Worker } from "bullmq";
-import { PossibleJob } from "shared/types";
+import { Job, Worker, tryCatch } from "bullmq";
+import postgres from "postgres";
+import {
+  CreatedPlaylist,
+  JobType,
+  PlaylistIngestJob,
+  PossibleJob,
+} from "shared/types";
+import { Client as TSClient } from "typesense";
 import { env } from "./env";
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
 
-const playlistIngestWorker = new Worker<PossibleJob>(
+import { handlePlaylistIngest } from "./handlePlaylistIngest";
+
+// Check if database is working
+
+const pool = new Pool({
+  connectionString: env.DATABASE_URL,
+});
+
+export const db = drizzle(pool, {
+  logger: true,
+});
+
+const typesense = new TSClient({
+  nodes: [
+    {
+      host: env.TYPESENSE_HOST,
+      port: 8108,
+      protocol: "http",
+    },
+  ],
+  apiKey: env.TYPESENSE_API_KEY,
+});
+
+const deps = {
+  db,
+  typesense,
+};
+
+export type Deps = typeof deps;
+
+const playlistIngestWorker = new Worker<PossibleJob, CreatedPlaylist>(
   env.QUEUE_NAME,
   async (job) => {
-    console.log(job.data);
-    console.log(job.timestamp);
-    return {
-      done: true,
-    };
+    // TODO: improve type inference
+
+    try {
+      switch (job.data.type) {
+        case JobType.PLAYLIST_INGEST:
+          console.log("Handling playlist ingest");
+          return handlePlaylistIngest(job as Job<PlaylistIngestJob>, deps);
+        default:
+          throw new Error("Invalid job type");
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   },
   {
     connection: {
@@ -18,5 +66,20 @@ const playlistIngestWorker = new Worker<PossibleJob>(
       password: env.REDIS_PASSWORD,
       port: 6379,
     },
+    autorun: false,
   },
 );
+
+playlistIngestWorker.run();
+
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM received, stopping worker");
+  await playlistIngestWorker.close();
+  process.exit(0);
+});
+
+process.on("SIGINT", async () => {
+  console.log("SIGINT received, stopping worker");
+  await playlistIngestWorker.close();
+  process.exit(0);
+});
