@@ -18,6 +18,7 @@ export async function createOrGetPlaylist(
   const possiblePlaylist = await db
     .select()
     .from(TB_playlists)
+    .where(eq(TB_playlists.id, job.data.playlistId))
     .then((a) => a.at(0));
 
   console.log("POSSIBLE PLAYLIST", possiblePlaylist);
