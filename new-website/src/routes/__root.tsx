@@ -38,14 +38,6 @@ function RootComponent() {
           <Link preload="intent" to="/" className="[&.active]:font-bold">
             Home
           </Link>
-
-          <Link preload="intent" to="/slow" className="[&.active]:font-bold">
-            Slow Data
-          </Link>
-
-          <Link to="/fast" preload="intent" className="[&.active]:font-bold">
-            Fast Data
-          </Link>
         </div>
 
         <div className="p-5">

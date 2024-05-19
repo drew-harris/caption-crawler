@@ -16,7 +16,8 @@ let TODO_LIST: Todo[] = [
 ];
 
 export const todoRouter = router({
-  getTodos: publicProcedure.query(() => {
+  getTodos: publicProcedure.query(({ ctx }) => {
+    console.log(`User ${ctx.user.id}`);
     return TODO_LIST;
   }),
 
