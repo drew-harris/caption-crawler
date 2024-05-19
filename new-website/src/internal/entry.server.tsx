@@ -12,11 +12,6 @@ import { trpc } from "~/internal/trpc";
 import { appRouter } from "~/trpc/app";
 import { Env } from "hono";
 
-// TODO: Relocate for auth / db (make user accessible)
-const createContext = async () => {
-  return {};
-};
-
 export async function render(req: Request, context: Env["Variables"]) {
   const assets = await assetsForRequest(req.url);
 
