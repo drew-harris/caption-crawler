@@ -1,5 +1,6 @@
 packages:
   - "website"
+  - "new-website"
   - "worker"
   - "db"
   - "shared"

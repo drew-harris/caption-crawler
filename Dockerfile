@@ -18,6 +18,7 @@ RUN pnpm deploy --filter=worker --prod /prod/worker
 FROM base AS website
 COPY --from=build /prod/website /prod/website
 WORKDIR /prod/website
+EXPOSE 3000
 CMD ["node", "dist/server.mjs"]
 
 FROM base AS worker
