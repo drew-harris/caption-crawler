@@ -15,7 +15,6 @@ export const handlePage = async (c: Context) => {
       //   // return;
       // }
 
-      console.log("Rendering page");
       const { stream: ssrxStream, statusCode } = await drewsRenderToStream({
         app: () => app,
         req: c.req.raw,
@@ -32,16 +31,11 @@ export const handlePage = async (c: Context) => {
           },
         ],
       });
-      console.log("Page rendered");
 
       let status = statusCode();
       if (router.hasNotFoundMatch() && status !== 500) status = 404;
 
-      console.log("Here");
-
       // Set the headers directly on the context
-
-      console.log("Here again");
 
       stream.onAbort(() => {
         if (!ssrxStream.locked) {
