@@ -15,6 +15,7 @@ const db = drizzle(queryClient);
 const auth = createAuth(db);
 
 const ingestQueue = new Queue<PossibleJob>(env.QUEUE_NAME, {
+  prefix: "cc",
   connection: {
     host: env.REDIS_HOST,
     password: env.REDIS_PASSWORD,
