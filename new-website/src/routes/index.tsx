@@ -1,16 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => {
+    const user = context.trpc.playlistQueue.whoAmI.ensureData();
+    return;
+  },
   component: IndexComponent,
 });
 
 function IndexComponent() {
+  const utils = trpc.useUtils();
+  const [whoIAm] = trpc.playlistQueue.whoAmI.useSuspenseQuery();
+  const autoUserMutation = trpc.playlistQueue.testAutoUser.useMutation({
+    onSettled(data, error, variables, context) {
+      utils.playlistQueue.whoAmI.invalidate();
+    },
+  });
   return (
     <div>
-      <h1>Todos</h1>
-      <div className="mb-4 text-sm">
-        All HTML is server rendered btw (no loading necessary) WHATR
-      </div>
+      <pre>{JSON.stringify(whoIAm)}</pre>
+      <button
+        onMouseDown={() => {
+          autoUserMutation.mutate();
+        }}
+      >
+        Log In
+      </button>
     </div>
   );
 }

@@ -21,7 +21,6 @@ declare module "hono" {
     Variables: {
       db: PostgresJsDatabase;
       auth: ReturnType<typeof createAuth>;
-      user: User;
       queue: Queue<PossibleJob>;
     };
   }

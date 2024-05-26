@@ -11,6 +11,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { createAuth } from "./auth";
 import { env } from "./env";
 import { authMiddleware } from "./auth/middleware";
+import { TRPCContext } from "~/trpc/base";
 
 const server = new Hono();
 
@@ -39,17 +40,20 @@ server.use("*", async (c, next) => {
   await next();
 });
 
-// TODO: Limit to just certain trpcs
 server.use("*", authMiddleware);
 
 server.use(
   "/trpc/*",
   trpcServer({
     router: appRouter,
-    createContext(opts, c) {
+    createContext(_opts, c) {
       return {
-        ...c.var,
-      };
+        db,
+        auth,
+        queue: ingestQueue,
+        user: c.var["user"],
+        baseRequest: c,
+      } satisfies TRPCContext;
     },
   }),
 );
