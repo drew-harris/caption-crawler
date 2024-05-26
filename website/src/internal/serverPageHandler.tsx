@@ -1,5 +1,5 @@
 import { Context } from "hono";
-import * as entry from "~/internal/entry.server";
+import * as entry from "./entry.server";
 import { stream } from "hono/streaming";
 import { drewsRenderToStream } from "./streamer";
 

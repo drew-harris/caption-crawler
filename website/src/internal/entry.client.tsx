@@ -2,9 +2,9 @@ import { QueryClient, hydrate } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
 import { httpBatchLink } from "@trpc/client";
 import { hydrateRoot } from "react-dom/client";
-import { createRouter } from "~/internal/router";
+import { createRouter } from "./router";
 import { createTRPCQueryUtils } from "@trpc/react-query";
-import { trpc } from "~/internal/trpc";
+import { trpc } from "./trpc";
 
 void render();
 

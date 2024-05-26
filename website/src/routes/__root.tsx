@@ -14,7 +14,7 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 // @ts-expect-error no types
 import jsesc from "jsesc";
 
-import type { RootRouterContext } from "~/internal/router";
+import type { RootRouterContext } from "../internal/router";
 
 export const Route = createRootRouteWithContext<RootRouterContext>()({
   component: RootComponent,
@@ -44,12 +44,12 @@ function RootComponent() {
           <Outlet />
         </div>
 
-        {/* {import.meta.env.DEV && ( */}
-        {/*   <> */}
-        {/*     <TanStackRouterDevtools /> */}
-        {/*     <ReactQueryDevtools /> */}
-        {/*   </> */}
-        {/* )} */}
+        {import.meta.env.DEV && (
+          <>
+            <TanStackRouterDevtools />
+            <ReactQueryDevtools />
+          </>
+        )}
 
         {bodyTags?.()}
         <DehydrateRouter />

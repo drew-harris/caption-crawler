@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { trpc } from "~/internal/trpc";
+import { trpc } from "../internal/trpc";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => {
-    const user = context.trpc.playlistQueue.whoAmI.ensureData();
+  loader: async ({ context }) => {
+    await context.trpc.playlistQueue.whoAmI.ensureData();
     return;
   },
   component: IndexComponent,
@@ -11,12 +11,13 @@ export const Route = createFileRoute("/")({
 
 function IndexComponent() {
   const utils = trpc.useUtils();
+
   const [whoIAm] = trpc.playlistQueue.whoAmI.useSuspenseQuery();
+
   const autoUserMutation = trpc.playlistQueue.testAutoUser.useMutation({
-    onSettled(data, error, variables, context) {
-      utils.playlistQueue.whoAmI.invalidate();
-    },
+    onSuccess: () => utils.playlistQueue.whoAmI.invalidate(),
   });
+
   return (
     <div>
       <pre>{JSON.stringify(whoIAm)}</pre>

@@ -11,7 +11,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { createAuth } from "./auth";
 import { env } from "./env";
 import { authMiddleware } from "./auth/middleware";
-import { TRPCContext } from "~/trpc/base";
+import { TRPCContext } from "./trpc/base";
 
 const server = new Hono();
 
