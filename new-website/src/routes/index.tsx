@@ -1,7 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { trpc } from "~/internal/trpc";
-import { Todo as TodoType } from "~/trpc/todos";
 
 export const Route = createFileRoute("/")({
   component: IndexComponent,

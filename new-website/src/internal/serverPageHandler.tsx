@@ -11,11 +11,10 @@ export const handlePage = async (c: Context) => {
       // @ts-expect-error more hono context stuff
       const { app, router } = await entry.render(c.req.raw, c.var);
       // TODO: Getting closer
-      // if (router.history.location.href != c.req.raw.url) {
-      //   console.log("Redirecting to", router.history.location.href);
-      //   // c.redirect(router.history.location.href);
-      //   // return;
-      // }
+      if (router.state.redirect) {
+        c.redirect(router.state.redirect.href);
+        return;
+      }
 
       const { stream: ssrxStream, statusCode } = await drewsRenderToStream({
         app: () => app,
