@@ -16,6 +16,11 @@ export const playlistQueueRouter = router({
     };
   }),
 
+  logOut: autoUserProcedure.mutation(async ({ ctx }) => {
+    ctx.auth.invalidateUserSessions(ctx.user.id);
+    return null;
+  }),
+
   queuePlaylist: autoUserProcedure
     .input(z.object({ url: z.string() }))
     .mutation(async ({ ctx, input }) => {
