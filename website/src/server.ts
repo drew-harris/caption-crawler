@@ -11,6 +11,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { createAuth } from "./auth";
 import { env } from "./env";
 import { authMiddleware } from "./auth/middleware";
+import { Client as TSClient } from "typesense";
 import { TRPCContext } from "./trpc/base";
 
 const server = new Hono();
@@ -26,6 +27,17 @@ const ingestQueue = new Queue<PossibleJob>(env.QUEUE_NAME, {
   },
 });
 
+const typesense = new TSClient({
+  nodes: [
+    {
+      host: env.TYPESENSE_HOST,
+      port: 8108,
+      protocol: "http",
+    },
+  ],
+  apiKey: env.TYPESENSE_API_KEY,
+});
+
 // TODO: FIX ERROR
 
 // @ts-expect-error hono context
@@ -37,6 +49,7 @@ server.use("*", async (c, next) => {
   c.set("db", db);
   c.set("auth", auth);
   c.set("queue", ingestQueue);
+  c.set("typesense", typesense);
   await next();
 });
 
@@ -53,6 +66,7 @@ server.use(
         queue: ingestQueue,
         user: c.var["user"],
         baseRequest: c,
+        typesense: typesense,
       } satisfies TRPCContext;
     },
   }),

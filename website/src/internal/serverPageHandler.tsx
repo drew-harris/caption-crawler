@@ -5,39 +5,36 @@ import { drewsRenderToStream } from "./streamer";
 
 export const handlePage = async (c: Context) => {
   c.header("Content-Type", "text/html; charset=utf-8");
-  return stream(c, async (stream) => {
-    try {
-      // TODO: Fix error
-      // @ts-expect-error more hono context stuff
-      const { app, router } = await entry.render(c.req.raw, c.var);
-      // TODO: Getting closer
-      if (router.state.redirect) {
-        c.redirect(router.state.redirect.href);
-        return;
-      }
+  try {
+    // TODO: Fix error
+    // @ts-expect-error more hono context stuff
+    const { app, router } = await entry.render(c.req.raw, c.var);
+    // TODO: Getting closer
+    if (router.state.redirect) {
+      return c.redirect(router.state.redirect.href);
+    }
 
-      const { stream: ssrxStream, statusCode } = await drewsRenderToStream({
-        app: () => app,
-        req: c.req.raw,
-        injectToStream: [
-          {
-            async emitBeforeStreamChunk() {
-              const injectorPromises = router.injectedHtml.map((d) =>
-                typeof d === "function" ? d() : d,
-              );
-              const injectors = await Promise.all(injectorPromises);
-              router.injectedHtml = [];
-              return injectors.join("");
-            },
+    const { stream: ssrxStream, statusCode } = await drewsRenderToStream({
+      app: () => app,
+      req: c.req.raw,
+      injectToStream: [
+        {
+          async emitBeforeStreamChunk() {
+            const injectorPromises = router.injectedHtml.map((d) =>
+              typeof d === "function" ? d() : d,
+            );
+            const injectors = await Promise.all(injectorPromises);
+            router.injectedHtml = [];
+            return injectors.join("");
           },
-        ],
-      });
+        },
+      ],
+    });
 
-      let status = statusCode();
-      if (router.hasNotFoundMatch() && status !== 500) status = 404;
+    let status = statusCode();
+    if (router.hasNotFoundMatch() && status !== 500) status = 404;
 
-      // Set the headers directly on the context
-
+    return stream(c, async (stream) => {
       stream.onAbort(() => {
         if (!ssrxStream.locked) {
           ssrxStream.cancel();
@@ -58,9 +55,9 @@ export const handlePage = async (c: Context) => {
           }
         });
       }
-    } catch (err) {
-      console.error("Server-side rendering failed:", err);
-      throw err; // Rethrow to let Hono handle the error
-    }
-  });
+    });
+  } catch (err) {
+    console.error("Server-side rendering failed:", err);
+    throw err; // Rethrow to let Hono handle the error
+  }
 };

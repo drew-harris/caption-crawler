@@ -9,6 +9,8 @@ export const env = createEnv({
     REDIS_PASSWORD: z.string(),
     REDIS_HOST: z.string(),
     QUEUE_NAME: z.string(),
+    TYPESENSE_HOST: z.string(),
+    TYPESENSE_API_KEY: z.string(),
   },
 
   runtimeEnv: process.env,

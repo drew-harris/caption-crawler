@@ -23,6 +23,7 @@ export const createUserWithCookie = async (
   auth: Lucia,
   req: Context<Env>,
 ) => {
+  console.log("CREATING USER NOW!!!!!!");
   const user = await createNewUser(db);
   const session = await auth.createSession(user.id, {});
   const sessionCookie = auth.createSessionCookie(session.id);

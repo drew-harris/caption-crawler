@@ -12,6 +12,7 @@ export const createAuth = (db: PostgresJsDatabase) => {
         isGoogle: databaseUserAttributes.isGoogle,
         isPro: databaseUserAttributes.isPro,
         createdAt: new Date(databaseUserAttributes.createdAt),
+        isAdmin: databaseUserAttributes.isAdmin,
       };
     },
   });
@@ -29,4 +30,5 @@ interface DatabaseUserAttributes {
   isGoogle: boolean;
   createdAt: Date;
   isPro: boolean;
+  isAdmin: boolean;
 }

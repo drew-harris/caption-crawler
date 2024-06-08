@@ -35,3 +35,11 @@ export const autoUserProcedure = t.procedure.use(async ({ next, ctx }) => {
     },
   });
 });
+
+export const adminProcedure = t.procedure.use(async ({ next, ctx }) => {
+  if (!ctx.user?.isAdmin) {
+    throw new Error("Not an admin");
+  }
+
+  return await next();
+});

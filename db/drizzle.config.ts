@@ -8,6 +8,9 @@ export default defineConfig({
   driver: "pg",
   verbose: true,
   dbCredentials: {
-    connectionString: process.env.DATABASE_URL!,
+    database: "caption-crawler",
+    host: process.env.DATABASE_HOST!,
+    password: process.env.DATABASE_PASSWORD,
+    user: process.env.DATABASE_USER,
   },
 });

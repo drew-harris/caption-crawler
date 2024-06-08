@@ -34,6 +34,7 @@
     "@trpc/react-query": "11.0.0-rc.366",
     "@trpc/server": "11.0.0-rc.366",
     "bullmq": "^5.7.8",
+    "typesense": "^1.8.2",
     "db": "workspace:*",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.9",
