@@ -16,10 +16,24 @@ export const Route = createFileRoute("/admin/")({
 });
 
 function AdminPage() {
+  const utils = trpc.useUtils();
   const [collections] = trpc.admin.getCollections.useSuspenseQuery();
+  const dropAllMutation = trpc.admin.nukeAllPlaylists.useMutation({
+    onSuccess() {
+      utils.admin.getCollections.invalidate();
+    },
+  });
+  const dropAll = () => {
+    confirm("Are you sure you want to drop all collections?")
+      ? dropAllMutation.mutate()
+      : null;
+  };
   return (
     <div>
       <div>Admin Page</div>
+      <button onClick={dropAll} className="bg-red-500">
+        DROP ALL
+      </button>
       {collections.map((c) => (
         <a
           target="_blank"
