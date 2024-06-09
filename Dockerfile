@@ -19,7 +19,7 @@ FROM base AS website
 COPY --from=build /prod/website /prod/website
 WORKDIR /prod/website
 EXPOSE 3000
-CMD ["node", "dist/server.mjs"]
+CMD ["node", "dist/server.js"]
 
 FROM base AS worker
 COPY --from=build /prod/worker /prod/worker

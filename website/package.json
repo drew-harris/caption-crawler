@@ -4,6 +4,9 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "pnpm run build.client && pnpm run build.server",
