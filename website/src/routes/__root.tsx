@@ -33,13 +33,7 @@ function RootComponent() {
         {headTags?.()}
       </head>
 
-      <body className="bg-black text-white">
-        <div className="border-b flex p-5 gap-5">
-          <Link preload="intent" to="/" className="[&.active]:font-bold">
-            Home
-          </Link>
-        </div>
-
+      <body className="bg-brand text-wording">
         <div className="p-5">
           <Outlet />
         </div>
