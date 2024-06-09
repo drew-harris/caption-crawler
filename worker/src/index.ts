@@ -60,6 +60,7 @@ const playlistIngestWorker = new Worker<PossibleJob, CreatedPlaylist>(
     }
   },
   {
+    prefix: "cc",
     connection: {
       host: env.REDIS_HOST,
       password: env.REDIS_PASSWORD,

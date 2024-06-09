@@ -12,8 +12,23 @@ export const createAuth = (db: PostgresJsDatabase) => {
         isGoogle: databaseUserAttributes.isGoogle,
         isPro: databaseUserAttributes.isPro,
         createdAt: new Date(databaseUserAttributes.createdAt),
+        isAdmin: databaseUserAttributes.isAdmin,
       };
     },
   });
   return lucia;
 };
+
+declare module "lucia" {
+  interface Register {
+    Lucia: ReturnType<typeof createAuth>;
+    DatabaseUserAttributes: DatabaseUserAttributes;
+  }
+}
+
+interface DatabaseUserAttributes {
+  isGoogle: boolean;
+  createdAt: Date;
+  isPro: boolean;
+  isAdmin: boolean;
+}

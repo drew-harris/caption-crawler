@@ -12,6 +12,7 @@ export const TB_users = pgTable("user", {
   isGoogle: boolean("is_google").default(false).notNull(),
   isPro: boolean("is_pro").default(false).notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+  isAdmin: boolean("is_admin").default(false).notNull(),
 });
 
 export const TB_sessions = pgTable("session", {

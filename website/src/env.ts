@@ -1,5 +1,6 @@
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
+import "dotenv/config";
 
 export const env = createEnv({
   server: {
@@ -8,15 +9,11 @@ export const env = createEnv({
     REDIS_PASSWORD: z.string(),
     REDIS_HOST: z.string(),
     QUEUE_NAME: z.string(),
+    TYPESENSE_HOST: z.string(),
+    TYPESENSE_API_KEY: z.string(),
   },
 
-  runtimeEnvStrict: {
-    DATABASE_URL: process.env.DATABASE_URL,
-    YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
-    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
-    REDIS_HOST: process.env.REDIS_HOST,
-    QUEUE_NAME: process.env.QUEUE_NAME,
-  },
+  runtimeEnv: process.env,
 
   emptyStringAsUndefined: true,
 });

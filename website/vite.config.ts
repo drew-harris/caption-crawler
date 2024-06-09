@@ -1,52 +1,43 @@
-import honox from "honox/vite";
-import client from "honox/vite/client";
-import { defineConfig, loadEnv } from "vite";
-import nodeServerPlugin from "./nodeServerPlugin";
+import { tanstackRouterAdapter } from "@ssrx/plugin-tanstack-router/adapter";
+import { ssrx } from "@ssrx/vite/plugin";
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig(({ mode, command }) => {
-  const env = loadEnv(mode, ".");
-  console.log(env);
-
-  if (mode === "client") {
-    return {
-      plugins: [client()],
-      clearScreen: false,
-      build: {
-        rollupOptions: {
-          input: ["/app/style.css"],
-          output: {
-            assetFileNames: "static/assets/[name].[ext]",
-          },
-        },
+// https://vitejs.dev/config/
+export default defineConfig(({ isSsrBuild, command }) => ({
+  plugins: [
+    tsconfigPaths(),
+    react(),
+    TanStackRouterVite({
+      generatedRouteTree: "src/internal/routeTree.gen.ts",
+      routesDirectory: "src/routes",
+    }),
+    ssrx({
+      clientEntry: "src/internal/entry.client.tsx",
+      routesFile: "src/internal/routeTree.gen.ts",
+      routerAdapter: tanstackRouterAdapter(),
+    }),
+  ],
+  build: {
+    rollupOptions: {
+      output: {
+        // Example of how one could break out larger more stable 3rd party libs into separate chunks for
+        // improved preloading
+        manualChunks:
+          !isSsrBuild && command === "build" ? manualChunks : undefined,
       },
-    };
-  } else {
-    return {
-      clearScreen: false,
-      plugins: [honox(), nodeServerPlugin()],
-      // define: {
-      //   ...Object.keys(env).reduce((prev, key) => {
-      //     // @ts-ignore
-      //     prev[`process.env.${key}`] = JSON.stringify(env[key]);
-      //     return prev;
-      //   }, {}),
-      // },
-      ssr: {
-        define: {
-          ...Object.keys(env).reduce((prev, key) => {
-            // @ts-ignore
-            prev[`process.env.${key}`] = JSON.stringify(env[key]);
-            return prev;
-          }, {}),
-        },
+    },
+  },
+}));
 
-        // postgres
-        external: ["pg", "drizzle-orm/node-postgres", "dotenv", "bullmq"],
-        target: "node",
-        optimizeDeps: {
-          include: ["drizzle-orm/node-postgres"],
-        },
-      },
-    };
+function manualChunks(id: string) {
+  if (id.match(/node_modules\/(react\/|react-dom\/)/)) {
+    return "vendor-rendering";
   }
-});
+
+  // if (id.match(/node_modules\/(@remix-run|react-router)/)) {
+  //   return 'vendor-router';
+  // }
+}
