@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -9,5 +11,19 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexComponent() {
-  return <div>Hello Caption Crawler</div>;
+  const [input, setInput] = useState("");
+  const playlistData = trpc.youtube.getPlaylistInfo.useQuery({
+    playlistUrl: input,
+  });
+  return (
+    <>
+      <div>Hello caption crawler</div>
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="border block"
+      />
+      {JSON.stringify(playlistData.data)}
+    </>
+  );
 }
