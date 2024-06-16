@@ -14,7 +14,10 @@ async function render() {
     links: [
       // TODO: REPLACE WITH DIRECT CALL
       httpBatchLink({
-        url: "http://localhost:3000/trpc",
+        url: import.meta.env.PROD
+          ? "https://captioncrawler.com/trpc"
+          : "http://localhost:3000/trpc",
+
         // NOTE: this will be important for auth stuff
         // You can pass any HTTP headers you wish here
         // async headers() {

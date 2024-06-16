@@ -69,6 +69,9 @@ server.use(
         typesense: typesense,
       } satisfies TRPCContext;
     },
+    onError({ error }) {
+      console.error(error);
+    },
   }),
 );
 
