@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/")({
@@ -12,18 +12,29 @@ export const Route = createFileRoute("/")({
 
 function IndexComponent() {
   const [input, setInput] = useState("");
-  const playlistData = trpc.youtube.getPlaylistInfo.useQuery({
-    playlistUrl: input,
-  });
+  const submitPlaylistMutation = trpc.playlistQueue.queuePlaylist.useMutation();
+
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!input) {
+      return;
+    }
+    submitPlaylistMutation.mutate({
+      url: input,
+    });
+  };
+
   return (
     <>
       <div>Hello caption crawler</div>
-      <input
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        className="border block"
-      />
-      {JSON.stringify(playlistData.data)}
+      <form onSubmit={submit}>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="border block"
+        />
+        <button type="submit">Submit</button>
+      </form>
     </>
   );
 }

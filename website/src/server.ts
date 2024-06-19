@@ -13,6 +13,7 @@ import { env } from "./env";
 import { authMiddleware } from "./auth/middleware";
 import { Client as TSClient } from "typesense";
 import { TRPCContext } from "./trpc/base";
+import { eiRoutes } from "~/eisearch";
 
 const server = new Hono();
 
@@ -25,6 +26,7 @@ const ingestQueue = new Queue<PossibleJob>(env.QUEUE_NAME, {
     password: env.REDIS_PASSWORD,
     port: 6379,
   },
+  prefix: "cc",
 });
 
 const typesense = new TSClient({
@@ -54,6 +56,8 @@ server.use("*", async (c, next) => {
 });
 
 server.use("*", authMiddleware);
+
+server.route("/ei", eiRoutes);
 
 server.use(
   "/trpc/*",

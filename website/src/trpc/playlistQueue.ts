@@ -29,6 +29,8 @@ export const playlistQueueRouter = router({
         env.YOUTUBE_API_KEY,
         playlistId,
       );
+
+      console.log("Got playlist info", playlistInfo);
       const job = await ctx.queue.add(createId("jobs"), {
         type: JobType.PLAYLIST_INGEST,
         playlistId: playlistId,

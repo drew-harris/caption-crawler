@@ -32,3 +32,13 @@ export type CreatedPlaylist = {
   thumbnailUrl: string;
   videoCount: number;
 };
+
+export type TypesenseMoment = {
+  id: string;
+  content: string;
+  start: number;
+  playlistId: string;
+  videoId: string;
+  videoTitle: string;
+  thumbnailUrl: string;
+};

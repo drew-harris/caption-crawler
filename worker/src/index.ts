@@ -45,6 +45,7 @@ const playlistIngestWorker = new Worker<PossibleJob, CreatedPlaylist>(
   env.QUEUE_NAME,
   async (job) => {
     // TODO: improve type inference
+    console.log("GOT JOB");
 
     try {
       switch (job.data.type) {

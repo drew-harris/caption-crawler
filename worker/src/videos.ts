@@ -2,12 +2,15 @@ import { TB_videos } from "db";
 import { Deps } from ".";
 import { collapseWords, getWordsFromVideoId } from "./captions";
 import { createId } from "shared";
+import { TypesenseMoment } from "shared/types";
 
-interface VideoInput {
+export interface VideoInput {
   id: string;
   title: string;
   userId: string;
   playlistId: string;
+  thumbnailUrl: string;
+  videoTitle: string;
 }
 
 type VideoInsert = typeof TB_videos.$inferInsert;
@@ -31,19 +34,24 @@ export function getVideoInsert(video: VideoInput): VideoInsert {
 export async function addVideoToTypesense(video: VideoInput, deps: Deps) {
   // Get the words from the video id
   const words = await getWordsFromVideoId(video.id);
-  const collapsedWords = collapseWords(words, 8);
+  const collapsedWords = collapseWords(words, 4);
 
   await deps.typesense
     .collections(video.playlistId)
     .documents()
     .import(
-      collapsedWords.map((words) => ({
-        id: createId("content"),
-        content: words.words,
-        start: Math.round(Math.round(words.start) / 1000),
-        playlistId: video.playlistId,
-        videoId: video.id,
-      })),
+      collapsedWords.map(
+        (words) =>
+          ({
+            id: createId("content"),
+            content: words.words,
+            start: Math.round(Math.round(words.start) / 1000),
+            playlistId: video.playlistId,
+            videoId: video.id,
+            thumbnailUrl: video.thumbnailUrl,
+            videoTitle: video.videoTitle,
+          }) satisfies TypesenseMoment,
+      ),
     );
 }
 

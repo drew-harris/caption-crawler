@@ -5,7 +5,7 @@ import { Deps } from ".";
 import { getVideosFromPlaylist } from "./captions";
 import { createOrGetPlaylist } from "./createOrGetPlaylist";
 import { createIndexIfNotExist } from "./searching";
-import { handleVideo } from "./videos";
+import { VideoInput, handleVideo } from "./videos";
 
 export const handlePlaylistIngest = async (
   job: Job<PlaylistIngestJob, CreatedPlaylist>,
@@ -21,7 +21,15 @@ export const handlePlaylistIngest = async (
 
   console.log("GOT PLAYLIST", playlist);
 
-  const youtubeVideos = await getVideosFromPlaylist(job.data.playlistId);
+  let youtubeVideos = await getVideosFromPlaylist(job.data.playlistId);
+
+  youtubeVideos = youtubeVideos.filter((v) => {
+    if (v.snippet?.thumbnails?.medium?.url) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 
   const videos = youtubeVideos.filter(
     (v) => !videoIds.includes(v.contentDetails?.videoId || ""),
@@ -30,12 +38,17 @@ export const handlePlaylistIngest = async (
   console.log("VIDEOS TO CHECK", videos.length);
 
   // TODO: fix possible undefined
-  const videoInputs = videos.map((v) => ({
-    id: v.contentDetails?.videoId || "",
-    title: v.snippet?.title || "",
-    userId: job.data.createdBy,
-    playlistId: playlist.id,
-  }));
+  const videoInputs = videos.map(
+    (v) =>
+      ({
+        id: v.contentDetails?.videoId || "",
+        title: v.snippet?.title || "",
+        userId: job.data.createdBy,
+        playlistId: playlist.id,
+        thumbnailUrl: v.snippet?.thumbnails?.medium?.url || "", // Asserted above
+        videoTitle: v.snippet?.title || "",
+      }) satisfies VideoInput,
+  );
 
   // Add videos to database
   const handleVideoResults = await Promise.all(
