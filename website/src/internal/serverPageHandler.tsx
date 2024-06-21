@@ -17,18 +17,6 @@ export const handlePage = async (c: Context) => {
     const { stream: ssrxStream, statusCode } = await drewsRenderToStream({
       app: () => app,
       req: c.req.raw,
-      injectToStream: [
-        {
-          async emitBeforeStreamChunk() {
-            const injectorPromises = router.injectedHtml.map((d) =>
-              typeof d === "function" ? d() : d,
-            );
-            const injectors = await Promise.all(injectorPromises);
-            router.injectedHtml = [];
-            return injectors.join("");
-          },
-        },
-      ],
     });
 
     let status = statusCode();

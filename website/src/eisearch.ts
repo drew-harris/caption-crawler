@@ -13,6 +13,7 @@ eiRoutes.post("/search", async (c) => {
       q: body.query,
       query_by: "content",
       highlight_full_fields: "content",
+      per_page: 30,
     })) as SearchResponse<TypesenseMoment>;
   const hits = result.hits?.map((hit) => {
     return {
