@@ -26,7 +26,9 @@ function IndexComponent() {
 
   return (
     <>
-      <div>Hello drew</div>
+      <div className="text-3xl text-blue-800 m-auto text-center font-semibold pt-48">
+        Search Deep On Youtube
+      </div>
       <form onSubmit={submit}>
         <input
           value={input}

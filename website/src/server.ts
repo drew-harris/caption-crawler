@@ -40,11 +40,7 @@ const typesense = new TSClient({
   apiKey: env.TYPESENSE_API_KEY,
 });
 
-// TODO: FIX ERROR
-
-// @ts-expect-error hono context
 server.use("/assets/*", serveStatic({ root: "./dist/public" }));
-// @ts-expect-error hono context
 server.use("/favicon.ico", serveStatic({ path: "./dist/public/favicon.ico" }));
 
 server.use("*", async (c, next) => {

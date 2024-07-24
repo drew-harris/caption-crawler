@@ -1,4 +1,4 @@
-import { TB_playlists } from "db";
+import { TB_collections } from "db";
 import { adminProcedure, router } from "~/trpc/base";
 
 export const adminRouter = router({
@@ -12,6 +12,6 @@ export const adminRouter = router({
     for (const collection of collections) {
       await ctx.typesense.collections(collection.name).delete();
     }
-    await ctx.db.delete(TB_playlists);
+    await ctx.db.delete(TB_collections);
   }),
 });

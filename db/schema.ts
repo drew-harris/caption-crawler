@@ -3,7 +3,6 @@ import {
   text,
   timestamp,
   boolean,
-  varchar,
   integer,
 } from "drizzle-orm/pg-core";
 
@@ -29,7 +28,7 @@ export const TB_sessions = pgTable("session", {
   }).notNull(),
 });
 
-export const TB_playlists = pgTable("playlist", {
+export const TB_collections = pgTable("collections", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description"),
@@ -51,7 +50,7 @@ export const TB_videos = pgTable("video", {
     .references(() => TB_users.id),
   playlistId: text("playlist_id")
     .notNull()
-    .references(() => TB_playlists.id, {
+    .references(() => TB_collections.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),

@@ -6,7 +6,7 @@ import { createId } from "shared";
 import { JobType, PlaylistIngestJob } from "shared/types";
 
 export const playlistQueueRouter = router({
-  testAutoUser: autoUserProcedure.mutation(async ({ ctx, input }) => {
+  testAutoUser: autoUserProcedure.mutation(async () => {
     return "done";
   }),
 

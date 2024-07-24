@@ -1,5 +1,5 @@
 import { Job } from "bullmq";
-import { TB_playlists, TB_videos } from "db";
+import { TB_collections, TB_videos } from "db";
 import { eq } from "drizzle-orm";
 import { CreatedPlaylist, PlaylistIngestJob } from "shared/types";
 import { getPlaylistDisplayInfo } from "shared/yt";
@@ -14,8 +14,8 @@ export async function createOrGetPlaylist(
   // Check database for playlist
   const possiblePlaylist = await deps.db
     .select()
-    .from(TB_playlists)
-    .where(eq(TB_playlists.id, job.data.playlistId))
+    .from(TB_collections)
+    .where(eq(TB_collections.id, job.data.playlistId))
     .then((a) => a.at(0));
 
   console.log("POSSIBLE PLAYLIST", possiblePlaylist);
@@ -32,6 +32,8 @@ export async function createOrGetPlaylist(
     .from(TB_videos)
     .where(eq(TB_videos.playlistId, job.data.playlistId));
   const videoIds = videos.map((v) => v.id);
+
+  console.log("VIDEO IDS", videoIds);
 
   return [possiblePlaylist, videoIds];
 }
@@ -64,7 +66,7 @@ async function createPlaylist(
 
   // Create the playlist in the database
   const created = await deps.db
-    .insert(TB_playlists)
+    .insert(TB_collections)
     .values({
       id: job.data.playlistId,
       title: playlistInfo.title,

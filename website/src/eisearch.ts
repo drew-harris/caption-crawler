@@ -6,6 +6,7 @@ const eiRoutes = new Hono();
 
 eiRoutes.post("/search", async (c) => {
   const body = await c.req.json();
+
   const result = (await c.var.typesense
     .collections("PLy4hOlwN9C5FfB8djRUNS9VSrKvZIVwMC")
     .documents()
