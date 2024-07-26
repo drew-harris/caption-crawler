@@ -7,6 +7,7 @@ import { Client as TSClient } from "typesense";
 import { env } from "./env";
 
 import { handlePlaylistIngest } from "./handlePlaylistIngest";
+import { logger } from "./logging";
 
 // Check if database is working
 
@@ -39,17 +40,17 @@ export type Deps = typeof deps;
 const playlistIngestWorker = new Worker<PossibleJob>(
   env.QUEUE_NAME,
   async (job) => {
-    console.log("GOT JOB", job.data);
+    logger.info({ job: job.data }, "Got job");
     try {
       switch (job.data.type) {
         case JobType.PLAYLIST_INGEST:
-          console.log("Handling playlist ingest");
+          logger.info("Handling playlist ingest");
           return handlePlaylistIngest(job as Job<PlaylistIngestJob>, deps);
         default:
           throw new Error("Invalid job type");
       }
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       throw err;
     }
   },
@@ -67,13 +68,13 @@ const playlistIngestWorker = new Worker<PossibleJob>(
 playlistIngestWorker.run();
 
 process.on("SIGTERM", async () => {
-  console.log("SIGTERM received, stopping worker");
+  logger.info("SIGTERM received, stopping worker");
   await playlistIngestWorker.close();
   process.exit(0);
 });
 
 process.on("SIGINT", async () => {
-  console.log("SIGINT received, stopping worker");
+  logger.info("SIGINT received, stopping worker");
   await playlistIngestWorker.close();
   process.exit(0);
 });

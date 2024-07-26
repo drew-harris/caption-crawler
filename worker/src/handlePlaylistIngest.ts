@@ -3,17 +3,16 @@ import { TB_videos } from "db";
 import { PlaylistIngestJob } from "shared/types";
 import { Deps } from ".";
 import { getVideosFromYoutube } from "./captions";
-import { getVideoIdsForCollection } from "./createOrGetPlaylist";
+import { getVideoIdsForCollection } from "./getVideoIdsFromCollection";
 import { createIndexIfNotExist } from "./searching";
 import { HandleVideoInput, handleVideo } from "./videos";
 import { createId } from "shared";
+import { logger } from "./logging";
 
 export const handlePlaylistIngest = async (
   job: Job<PlaylistIngestJob>,
   deps: Deps,
 ) => {
-  console.log(job.data);
-
   const currentVideoIds = await getVideoIdsForCollection(job, deps);
 
   // Create an index on typesense if it doesn't exist already
@@ -23,6 +22,8 @@ export const handlePlaylistIngest = async (
   );
 
   let youtubeVideos = await getVideosFromYoutube(job.data.collection.youtubeId);
+
+  logger.info({ amount: youtubeVideos.length }, "Got videos from youtube");
 
   youtubeVideos = youtubeVideos.filter((v) => {
     if (v.snippet?.thumbnails?.medium?.url) {
@@ -45,6 +46,8 @@ export const handlePlaylistIngest = async (
       }) satisfies HandleVideoInput,
   );
 
+  logger.info({ amount: videoInputs.length }, "Got videos to handle");
+
   // Add videos to database
   const handleVideoResults = await Promise.all(
     videoInputs.map((v) => handleVideo(v, deps)),
@@ -55,16 +58,17 @@ export const handlePlaylistIngest = async (
     if (result.result === "success") {
       inserts.push(result.insert);
     } else {
-      console.error("Error adding video", result.error);
+      logger.error(result.error, "error adding video");
     }
   }
 
   const inserted = await deps.db.insert(TB_videos).values(inserts).returning();
 
-  console.log("INSERTED", inserted.length, "Videos");
-  console.log(
-    "Failed to insert",
-    handleVideoResults.filter((r) => r.result === "error").length,
+  logger.info({ amount: inserted.length }, "Inserted videos");
+
+  logger.info(
+    { amount: handleVideoResults.filter((r) => r.result === "error").length },
+    "Errors processing videos videos",
   );
 
   return "Done";

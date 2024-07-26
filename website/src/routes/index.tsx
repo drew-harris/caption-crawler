@@ -10,7 +10,6 @@ function IndexComponent() {
   const [input, setInput] = useState("");
   const submitPlaylistMutation = trpc.playlistQueue.queuePlaylist.useMutation({
     onSuccess(data, variables, context) {
-      console.log("JOB STARTED");
       alert("JOB STARTED");
     },
   });

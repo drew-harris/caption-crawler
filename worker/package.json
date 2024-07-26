@@ -5,7 +5,7 @@
   "scripts": {
     "build-old": "tsc",
     "build": "esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js",
-    "dev": "nodemon --exec \"node -r esbuild-register ./src/index.ts\" -e .ts",
+    "dev": "nodemon --exec \"node -r esbuild-register ./src/index.ts | pino-pretty\" -e .ts",
     "preview": "node ./dist/index.js",
     "tsnode": "ts-node src/index.ts",
     "typecheck": "tsc --noEmit"
@@ -29,6 +29,8 @@
     "drizzle-orm": "^0.30.9",
     "hono": "^4.4.6",
     "pg": "^8.12.0",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
     "postgres": "^3.4.4",
     "shared": "workspace:*",
     "ts-node": "^10.9.2",

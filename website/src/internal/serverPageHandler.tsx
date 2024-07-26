@@ -2,6 +2,7 @@ import { Context } from "hono";
 import * as entry from "./entry.server";
 import { stream } from "hono/streaming";
 import { drewsRenderToStream } from "./streamer";
+import { logger } from "~/logging";
 
 export const handlePage = async (c: Context) => {
   c.header("Content-Type", "text/html; charset=utf-8");
@@ -30,7 +31,7 @@ export const handlePage = async (c: Context) => {
       });
 
       if (ssrxStream.locked) {
-        console.error("Stream is locked, cannot proceed with operations");
+        logger.error("Stream is locked, cannot proceed with operations");
         return;
       }
 
@@ -45,7 +46,7 @@ export const handlePage = async (c: Context) => {
       }
     });
   } catch (err) {
-    console.error("Server-side rendering failed:", err);
+    logger.error(err, "Server-side rendering failed:");
     throw err; // Rethrow to let Hono handle the error
   }
 };

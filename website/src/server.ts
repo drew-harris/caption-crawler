@@ -14,6 +14,7 @@ import { authMiddleware } from "./auth/middleware";
 import { Client as TSClient } from "typesense";
 import { TRPCContext } from "./trpc/base";
 import { eiRoutes } from "~/eisearch";
+import { logger } from "~/logging";
 
 const server = new Hono();
 
@@ -70,7 +71,7 @@ server.use(
       } satisfies TRPCContext;
     },
     onError({ error }) {
-      console.error(error);
+      logger.error(error);
     },
   }),
 );
@@ -87,7 +88,7 @@ if (import.meta.env.PROD) {
       fetch: server.fetch,
     },
     () => {
-      console.log(`🚀 Server running at http://localhost:${port}`);
+      logger.info(`🚀 Server running at http://localhost:${port}`);
     },
   );
 }

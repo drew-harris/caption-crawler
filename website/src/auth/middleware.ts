@@ -3,6 +3,7 @@ import { createNewUser } from "../serverUtils/users";
 import { getCookie, setCookie } from "hono/cookie";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { Lucia } from "lucia";
+import { logger } from "~/logging";
 
 export const authMiddleware = async (c: Context<Env>, next: Next) => {
   const cookie = getCookie(c, c.var.auth.sessionCookieName);
@@ -23,7 +24,7 @@ export const createUserWithCookie = async (
   auth: Lucia,
   req: Context<Env>,
 ) => {
-  console.log("CREATING USER NOW!!!!!!");
+  logger.info("Creating user with cookie");
   const user = await createNewUser(db);
   const session = await auth.createSession(user.id, {});
   const sessionCookie = auth.createSessionCookie(session.id);

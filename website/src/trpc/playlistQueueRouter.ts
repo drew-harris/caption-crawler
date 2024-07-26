@@ -8,6 +8,7 @@ import { getPlaylistMetadata } from "~/serverUtils/metadata";
 import { TB_collections } from "db";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
+import { logger } from "~/logging";
 
 export const playlistQueueRouter = router({
   testAutoUser: autoUserProcedure.mutation(async () => {
@@ -48,7 +49,10 @@ export const playlistQueueRouter = router({
         );
 
       if (possibleCollection) {
-        console.log("FOUND EXISTING PLAYLIST");
+        logger.info(
+          { playlistId },
+          "Found existing playlist during submission",
+        );
         const job = await ctx.queue.add(createId("jobs"), {
           type: JobType.PLAYLIST_INGEST,
           collection: possibleCollection,
@@ -56,7 +60,7 @@ export const playlistQueueRouter = router({
         return job;
       }
 
-      console.log("Got playlist metadata during upload");
+      logger.info({ playlistId }, "Got playlist metadata during upload");
       const collectionId = createId("collection");
 
       const [collection] = await ctx.db

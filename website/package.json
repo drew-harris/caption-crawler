@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite dev --port 3000",
+    "dev": "vite dev --port 3000 | pino-pretty",
     "build": "pnpm run build.client && pnpm run build.server",
     "build.client": "NODE_ENV=production vite build",
     "build.server": "NODE_ENV=production vite build --ssr",
@@ -37,7 +37,6 @@
     "@trpc/react-query": "11.0.0-rc.366",
     "@trpc/server": "11.0.0-rc.366",
     "bullmq": "^5.8.2",
-    "typesense": "^1.8.2",
     "db": "workspace:*",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.9",
@@ -46,10 +45,13 @@
     "jsesc": "3.0.2",
     "lucia": "^3.2.0",
     "nanoid": "^5.0.7",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
     "postgres": "^3.4.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "shared": "workspace:*",
+    "typesense": "^1.8.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
