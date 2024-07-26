@@ -1,6 +1,9 @@
+import { InferSelectModel } from "drizzle-orm";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { TB_collections } from "db";
+
 export enum JobType {
   PLAYLIST_INGEST = "playlistIngest",
-  FAKE_MESSAGE = "fakeMessage",
 }
 
 type BaseJob = {
@@ -9,36 +12,34 @@ type BaseJob = {
 
 export type PlaylistIngestJob = BaseJob & {
   type: JobType.PLAYLIST_INGEST;
-  playlistId: string;
-  createdBy: string;
-  originalUrl: string;
+  collection: Collection;
 };
 
-export type FakeJob = BaseJob & {
-  color: string;
-  type: JobType.FAKE_MESSAGE;
-};
+// Add other job types here
+export type PossibleJob = PlaylistIngestJob;
 
-export type PossibleJob = PlaylistIngestJob | FakeJob;
-
-export type CreatedPlaylist = {
-  description: string | null;
-  id: string;
-  title: string;
-  createdBy: string;
-  originalUrl: string;
-  channelId: string;
-  channelTitle: string;
-  thumbnailUrl: string;
-  videoCount: number;
-};
+// export type CreatedPlaylist = {
+//   description: string | null;
+//   id: string;
+//   title: string;
+//   createdBy: string;
+//   originalUrl: string;
+//   channelId: string;
+//   channelTitle: string;
+//   thumbnailUrl: string;
+//   videoCount: number;
+// };
 
 export type TypesenseMoment = {
   id: string;
   content: string;
   start: number;
-  playlistId: string;
   videoId: string;
+  youtubeVideoId: string;
   videoTitle: string;
   thumbnailUrl: string;
 };
+
+export type DB = PostgresJsDatabase;
+
+export type Collection = InferSelectModel<typeof TB_collections>;

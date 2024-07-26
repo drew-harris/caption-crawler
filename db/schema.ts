@@ -1,9 +1,12 @@
 import {
+  index,
   pgTable,
   text,
   timestamp,
   boolean,
   integer,
+  uniqueIndex,
+  unique,
 } from "drizzle-orm/pg-core";
 
 export const TB_users = pgTable("user", {
@@ -30,28 +33,52 @@ export const TB_sessions = pgTable("session", {
 
 export const TB_collections = pgTable("collections", {
   id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description"),
-  createdBy: text("created_by")
+  type: text("type").$type<"playlist" | "channel">().default("playlist"),
+  semantic: boolean("semantic").default(false),
+  youtubeId: text("youtube_id")
     .notNull()
-    .references(() => TB_users.id),
-  originalUrl: text("original_url").notNull().unique(),
-  channelId: text("channel_id").notNull(),
-  channelTitle: text("channel_title").notNull(),
-  thumbnailUrl: text("thumbnail_url").notNull(),
-  videoCount: integer("video_count").notNull(),
-});
-
-export const TB_videos = pgTable("video", {
-  id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => TB_users.id),
-  playlistId: text("playlist_id")
-    .notNull()
-    .references(() => TB_collections.id, {
+    .references(() => TB_metadata.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
+  originalUrl: text("original_url").notNull(),
+  createdBy: text("created_by")
+    .notNull()
+    .references(() => TB_users.id),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  videoCount: integer("video_count").notNull().default(0),
 });
+
+export const TB_metadata = pgTable("metadata", {
+  id: text("id").primaryKey(), // Same as youtube id
+  title: text("title").notNull(),
+  description: text("description"),
+  thumbnailUrl: text("thumbnail_url").notNull(),
+  channelId: text("channel_id").notNull(),
+  channelTitle: text("channel_title").notNull(),
+});
+
+export const TB_videos = pgTable(
+  "video",
+  {
+    id: text("id").primaryKey(),
+    youtubeId: text("youtube_id").notNull(),
+    title: text("title").notNull(),
+    collectionId: text("collection_id")
+      .notNull()
+      .references(() => TB_collections.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    thumbnailUrl: text("thumbnail_url").notNull(),
+  },
+  (table) => {
+    return {
+      youtubeIdx: index("youtube_vid_idx").on(table.youtubeId),
+      pairedVidAndCollection: unique("paired_vid_and_collection").on(
+        table.youtubeId,
+        table.collectionId,
+      ),
+    };
+  },
+);

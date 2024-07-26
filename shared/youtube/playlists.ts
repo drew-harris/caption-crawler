@@ -1,4 +1,5 @@
 import { youtube_v3 } from "@googleapis/youtube";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 export const getPlaylistIdFromUrl = (url: string) => {
   const playlistUrl = new URLSearchParams(url.split("?")[1]);

@@ -3,22 +3,24 @@ import { FormEvent, useState } from "react";
 import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/")({
-  loader: async ({ context }) => {
-    await context.trpc.playlistQueue.whoAmI.ensureData();
-    return;
-  },
   component: IndexComponent,
 });
 
 function IndexComponent() {
   const [input, setInput] = useState("");
-  const submitPlaylistMutation = trpc.playlistQueue.queuePlaylist.useMutation();
+  const submitPlaylistMutation = trpc.playlistQueue.queuePlaylist.useMutation({
+    onSuccess(data, variables, context) {
+      console.log("JOB STARTED");
+      alert("JOB STARTED");
+    },
+  });
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!input) {
       return;
     }
+    console.log("running mutation");
     submitPlaylistMutation.mutate({
       url: input,
     });

@@ -3,41 +3,52 @@ import { Deps } from ".";
 import { collapseWords, getWordsFromVideoId } from "./captions";
 import { createId } from "shared";
 import { TypesenseMoment } from "shared/types";
+import { z } from "zod";
+import { youtube_v3 } from "@googleapis/youtube";
 
-export interface VideoInput {
+export interface HandleVideoInput {
   id: string;
-  title: string;
-  userId: string;
-  playlistId: string;
-  thumbnailUrl: string;
-  videoTitle: string;
+  collectionId: string;
+  youtubeData: youtube_v3.Schema$PlaylistItem;
 }
 
 type VideoInsert = typeof TB_videos.$inferInsert;
 
-export function getVideoInsert(video: VideoInput): VideoInsert {
-  // Ensure that all required fields are present
-  if (!video.id || !video.title || !video.userId || !video.playlistId) {
-    throw new Error("Missing required video fields");
-  }
+const videoSchema = z.object({
+  id: z.string(),
+  collectionId: z.string(),
+  youtubeId: z.string(),
+  thumbnailUrl: z.string(),
+  title: z.string(),
+}) satisfies z.ZodType<VideoInsert>;
 
-  // Insert the video into the database
-  const insert: VideoInsert = {
+export function getVideoInsert(video: HandleVideoInput): VideoInsert {
+  const toParse = {
+    collectionId: video.collectionId,
     id: video.id,
-    title: video.title,
-    userId: video.userId,
-    playlistId: video.playlistId,
+    thumbnailUrl: video.youtubeData.snippet?.thumbnails?.medium?.url,
+    title: video.youtubeData.snippet?.title,
+    youtubeId: video.youtubeData.contentDetails?.videoId,
   };
-  return insert;
+
+  const parsed = videoSchema.safeParse(toParse);
+  if (parsed.error) {
+    throw new Error("Could not parse video");
+  } else {
+    return parsed.data;
+  }
 }
 
-export async function addVideoToTypesense(video: VideoInput, deps: Deps) {
+export async function addVideoToTypesense(
+  videoInsert: VideoInsert,
+  deps: Deps,
+) {
   // Get the words from the video id
-  const words = await getWordsFromVideoId(video.id);
+  const words = await getWordsFromVideoId(videoInsert.youtubeId);
   const collapsedWords = collapseWords(words, 4);
 
   await deps.typesense
-    .collections(video.playlistId)
+    .collections(videoInsert.collectionId)
     .documents()
     .import(
       collapsedWords.map(
@@ -46,10 +57,10 @@ export async function addVideoToTypesense(video: VideoInput, deps: Deps) {
             id: createId("content"),
             content: words.words,
             start: Math.round(Math.round(words.start) / 1000),
-            playlistId: video.playlistId,
-            videoId: video.id,
-            thumbnailUrl: video.thumbnailUrl,
-            videoTitle: video.videoTitle,
+            videoId: videoInsert.id,
+            youtubeVideoId: videoInsert.youtubeId,
+            thumbnailUrl: videoInsert.thumbnailUrl,
+            videoTitle: videoInsert.title,
           }) satisfies TypesenseMoment,
       ),
     );
@@ -67,17 +78,16 @@ type HandleVideoResult =
     };
 
 export const handleVideo = async (
-  video: VideoInput,
+  video: HandleVideoInput,
   deps: Deps,
 ): Promise<HandleVideoResult> => {
   try {
-    // First, attempt to add the video to Typesense
-    await addVideoToTypesense(video, deps);
-
     // If successful, proceed to add the video to the database
     const insert = getVideoInsert(video);
 
-    // If both operations are successful, return a success result
+    // First, attempt to add the video to Typesense
+    await addVideoToTypesense(insert, deps);
+
     return { result: "success", insert };
   } catch (error: any) {
     // If any operation fails, catch the error and return an error result

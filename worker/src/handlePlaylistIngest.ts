@@ -1,27 +1,28 @@
 import { Job } from "bullmq";
 import { TB_videos } from "db";
-import { CreatedPlaylist, PlaylistIngestJob } from "shared/types";
+import { PlaylistIngestJob } from "shared/types";
 import { Deps } from ".";
-import { getVideosFromPlaylist } from "./captions";
-import { createOrGetPlaylist } from "./createOrGetPlaylist";
+import { getVideosFromYoutube } from "./captions";
+import { getVideoIdsForCollection } from "./createOrGetPlaylist";
 import { createIndexIfNotExist } from "./searching";
-import { VideoInput, handleVideo } from "./videos";
+import { HandleVideoInput, handleVideo } from "./videos";
+import { createId } from "shared";
 
 export const handlePlaylistIngest = async (
-  job: Job<PlaylistIngestJob, CreatedPlaylist>,
+  job: Job<PlaylistIngestJob>,
   deps: Deps,
 ) => {
-  // Steps to ingest a playlist
   console.log(job.data);
 
-  const [playlist, videoIds] = await createOrGetPlaylist(job, deps);
+  const currentVideoIds = await getVideoIdsForCollection(job, deps);
 
   // Create an index on typesense if it doesn't exist already
-  const searchIndex = await createIndexIfNotExist(playlist.id, deps.typesense);
+  const searchIndex = await createIndexIfNotExist(
+    job.data.collection.id,
+    deps.typesense,
+  );
 
-  console.log("GOT PLAYLIST", playlist);
-
-  let youtubeVideos = await getVideosFromPlaylist(job.data.playlistId);
+  let youtubeVideos = await getVideosFromYoutube(job.data.collection.youtubeId);
 
   youtubeVideos = youtubeVideos.filter((v) => {
     if (v.snippet?.thumbnails?.medium?.url) {
@@ -32,22 +33,16 @@ export const handlePlaylistIngest = async (
   });
 
   const videos = youtubeVideos.filter(
-    (v) => !videoIds.includes(v.contentDetails?.videoId || ""),
+    (v) => !currentVideoIds.includes(v.contentDetails?.videoId || ""),
   );
 
-  console.log("VIDEOS TO CHECK", videos.length);
-
-  // TODO: fix possible undefined
   const videoInputs = videos.map(
     (v) =>
       ({
-        id: v.contentDetails?.videoId || "",
-        title: v.snippet?.title || "",
-        userId: job.data.createdBy,
-        playlistId: playlist.id,
-        thumbnailUrl: v.snippet?.thumbnails?.medium?.url || "", // Asserted above
-        videoTitle: v.snippet?.title || "",
-      }) satisfies VideoInput,
+        id: createId("video"),
+        youtubeData: v,
+        collectionId: job.data.collection.id,
+      }) satisfies HandleVideoInput,
   );
 
   // Add videos to database
@@ -66,11 +61,11 @@ export const handlePlaylistIngest = async (
 
   const inserted = await deps.db.insert(TB_videos).values(inserts).returning();
 
-  console.log("INSERTED", inserted);
+  console.log("INSERTED", inserted.length, "Videos");
   console.log(
     "Failed to insert",
     handleVideoResults.filter((r) => r.result === "error").length,
   );
 
-  return playlist;
+  return "Done";
 };

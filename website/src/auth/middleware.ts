@@ -1,5 +1,5 @@
 import { Context, Env, Next } from "hono";
-import { createNewUser } from "../db/users";
+import { createNewUser } from "../serverUtils/users";
 import { getCookie, setCookie } from "hono/cookie";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { Lucia } from "lucia";

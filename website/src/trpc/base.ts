@@ -27,7 +27,6 @@ export const autoUserProcedure = t.procedure.use(async ({ next, ctx }) => {
     user = ctx.user;
   }
 
-  await next();
   return next({
     ctx: {
       ...ctx,

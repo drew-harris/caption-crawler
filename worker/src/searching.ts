@@ -1,5 +1,6 @@
 import { Client } from "typesense";
 
+// TODO: add semantic option
 export const createIndexIfNotExist = async (id: string, typesense: Client) => {
   try {
     return await typesense.collections(id).retrieve();

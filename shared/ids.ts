@@ -6,7 +6,9 @@ const nanoid = customAlphabet(
 const prefixes = {
   user: "us",
   jobs: "job",
+  collection: "col",
   content: "c",
+  video: "v",
 } as const;
 
 export function createId(prefix: keyof typeof prefixes): string {

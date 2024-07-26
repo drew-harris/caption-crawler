@@ -2,12 +2,7 @@ import { Job, Worker } from "bullmq";
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import {
-  CreatedPlaylist,
-  JobType,
-  PlaylistIngestJob,
-  PossibleJob,
-} from "shared/types";
+import { JobType, PlaylistIngestJob, PossibleJob } from "shared/types";
 import { Client as TSClient } from "typesense";
 import { env } from "./env";
 
@@ -41,12 +36,10 @@ const deps = {
 
 export type Deps = typeof deps;
 
-const playlistIngestWorker = new Worker<PossibleJob, CreatedPlaylist>(
+const playlistIngestWorker = new Worker<PossibleJob>(
   env.QUEUE_NAME,
   async (job) => {
-    // TODO: improve type inference
-    console.log("GOT JOB");
-
+    console.log("GOT JOB", job.data);
     try {
       switch (job.data.type) {
         case JobType.PLAYLIST_INGEST:
