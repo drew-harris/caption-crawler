@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './../routes/__root'
 import { Route as IndexImport } from './../routes/index'
 import { Route as AdminIndexImport } from './../routes/admin.index'
+import { Route as SearchCollectionImport } from './../routes/search.$collection'
 
 // Create/Update Routes
 
@@ -23,6 +24,11 @@ const IndexRoute = IndexImport.update({
 
 const AdminIndexRoute = AdminIndexImport.update({
   path: '/admin/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SearchCollectionRoute = SearchCollectionImport.update({
+  path: '/search/$collection',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -37,6 +43,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/search/$collection': {
+      id: '/search/$collection'
+      path: '/search/$collection'
+      fullPath: '/search/$collection'
+      preLoaderRoute: typeof SearchCollectionImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -49,7 +62,11 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({ IndexRoute, AdminIndexRoute })
+export const routeTree = rootRoute.addChildren({
+  IndexRoute,
+  SearchCollectionRoute,
+  AdminIndexRoute,
+})
 
 /* prettier-ignore-end */
 
@@ -60,11 +77,15 @@ export const routeTree = rootRoute.addChildren({ IndexRoute, AdminIndexRoute })
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/search/$collection",
         "/admin/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/search/$collection": {
+      "filePath": "search.$collection.tsx"
     },
     "/admin/": {
       "filePath": "admin.index.tsx"

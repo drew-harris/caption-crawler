@@ -57,7 +57,12 @@ export const playlistQueueRouter = router({
           type: JobType.PLAYLIST_INGEST,
           collection: possibleCollection,
         } satisfies PlaylistIngestJob);
-        return job;
+        return {
+          jobId: job.id,
+          metadata,
+          collection: possibleCollection,
+          user: ctx.user,
+        };
       }
 
       logger.info({ playlistId }, "Got playlist metadata during upload");
@@ -98,7 +103,23 @@ export const playlistQueueRouter = router({
 
       return {
         jobId: job.id,
+        collection: collection,
         metadata,
+        user: ctx.user,
+      };
+    }),
+
+  jobStatus: publicProcedure
+    .input(z.object({ jobId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const job = await ctx.queue.getJob(input.jobId);
+      if (!job) {
+        return null;
+      }
+      return {
+        progress: job.progress,
+        job: job.toJSON(),
+        state: job.getState(),
       };
     }),
 });

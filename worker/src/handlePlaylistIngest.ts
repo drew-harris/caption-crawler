@@ -1,5 +1,5 @@
 import { Job } from "bullmq";
-import { TB_videos } from "db";
+import { TB_collections, TB_videos } from "db";
 import { PlaylistIngestJob } from "shared/types";
 import { Deps } from ".";
 import { getVideosFromYoutube } from "./captions";
@@ -8,6 +8,7 @@ import { createIndexIfNotExist } from "./searching";
 import { HandleVideoInput, handleVideo } from "./videos";
 import { createId } from "shared";
 import { logger } from "./logging";
+import { eq } from "drizzle-orm";
 
 export const handlePlaylistIngest = async (
   job: Job<PlaylistIngestJob>,
@@ -24,6 +25,14 @@ export const handlePlaylistIngest = async (
   let youtubeVideos = await getVideosFromYoutube(job.data.collection.youtubeId);
 
   logger.info({ amount: youtubeVideos.length }, "Got videos from youtube");
+
+  // Update the video count
+  await deps.db
+    .update(TB_collections)
+    .set({
+      videoCount: youtubeVideos.length,
+    })
+    .where(eq(TB_collections.id, job.data.collection.id));
 
   youtubeVideos = youtubeVideos.filter((v) => {
     if (v.snippet?.thumbnails?.medium?.url) {
