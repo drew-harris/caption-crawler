@@ -89,8 +89,15 @@ export const playlistQueueRouter = router({
         collection,
       } satisfies PlaylistIngestJob);
 
+      if (!job.id) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Could not create job",
+        });
+      }
+
       return {
-        job,
+        jobId: job.id,
         metadata,
       };
     }),

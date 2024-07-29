@@ -6,8 +6,8 @@ import type { ErrorComponentProps } from "@tanstack/react-router";
 import {
   createRootRouteWithContext,
   ErrorComponent,
-  Link,
   Outlet,
+  useLoaderData,
   useRouter,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
@@ -15,29 +15,39 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import jsesc from "jsesc";
 
 import type { RootRouterContext } from "../internal/router";
+import { Layout } from "~/client/Layout";
+import { UserContextProvider } from "~/client/context/UserContext";
 
 export const Route = createRootRouteWithContext<RootRouterContext>()({
   component: RootComponent,
   errorComponent: RootErrorComponent,
+  loader: (ctx) => {
+    return ctx.context.user || null;
+  },
 });
 
 function RootComponent() {
   const router = useRouter();
   const { bodyTags, headTags } = router.options.context;
+  const user = useLoaderData({ from: "__root__" });
 
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
         {headTags?.()}
       </head>
 
       <body className="bg-brand text-wording">
-        <div className="p-5">
-          <Outlet />
-        </div>
-
+        <UserContextProvider initialUser={user}>
+          <Layout>
+            <Outlet />
+          </Layout>
+        </UserContextProvider>
         {import.meta.env.DEV && (
           <>
             <TanStackRouterDevtools />

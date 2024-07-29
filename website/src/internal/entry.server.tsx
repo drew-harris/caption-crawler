@@ -63,11 +63,13 @@ export async function render(req: Request, context: Env["Variables"]) {
         headTags: () => renderAssets(assets.headAssets),
         bodyTags: () => renderAssets(assets.bodyAssets),
         trpc: queryUtils,
+        user: context.user,
       },
       history: memoryHistory,
       dehydrate: () => {
         return {
           queryClient: dehydrate(queryClient),
+          user: context.user,
         };
       },
     },

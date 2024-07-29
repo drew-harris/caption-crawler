@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite dev --port 3000 | pino-pretty",
+    "dev": "vite dev --port 3000 --host | pino-pretty",
     "build": "pnpm run build.client && pnpm run build.server",
     "build.client": "NODE_ENV=production vite build",
     "build.server": "NODE_ENV=production vite build --ssr",
