@@ -37,12 +37,18 @@ export const getPlaylistMetadata = async ({
 
   // Use zod
 
+  const thumbnail =
+    youtubeInfo.thumbnails?.maxres?.url ||
+    youtubeInfo.thumbnails?.high?.url ||
+    youtubeInfo.thumbnails?.medium?.url ||
+    youtubeInfo.thumbnails?.default?.url;
+
   const candidateData = {
     channelId: youtubeInfo.channelId,
     channelTitle: youtubeInfo.channelTitle,
     description: youtubeInfo.description,
     id: playlistId,
-    thumbnailUrl: youtubeInfo.thumbnails?.default?.url,
+    thumbnailUrl: thumbnail,
     title: youtubeInfo.title,
   };
 

@@ -5,9 +5,11 @@ import { adminRouter } from "~/trpc/adminRouter";
 import { youtubeRouter } from "~/trpc/youtubeRouter";
 import { metadataRouter } from "~/trpc/metadataRouter";
 import { collectionRouter } from "~/trpc/collectionRouter";
+import { searchRouter } from "~/trpc/searchRouter";
 
 export const appRouter = router({
   playlistQueue: playlistQueueRouter,
+  search: searchRouter,
   collections: collectionRouter,
   metadata: metadataRouter,
   youtube: youtubeRouter,

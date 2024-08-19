@@ -1,5 +1,6 @@
-import { Job, Worker } from "bullmq";
+import { Job, RedisConnection, Worker } from "bullmq";
 import "dotenv/config";
+import Redis from "ioredis";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { JobType, PlaylistIngestJob, PossibleJob } from "shared/types";
@@ -19,6 +20,13 @@ const db = drizzle(pool, {
   logger: true,
 });
 
+const redis = new Redis({
+  host: env.REDIS_HOST,
+  password: env.REDIS_PASSWORD,
+  port: 6379,
+  keyPrefix: "cc-data",
+});
+
 const typesense = new TSClient({
   nodes: [
     {
@@ -33,6 +41,7 @@ const typesense = new TSClient({
 const deps = {
   db,
   typesense,
+  redis,
 };
 
 export type Deps = typeof deps;

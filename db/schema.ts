@@ -46,7 +46,7 @@ export const TB_collections = pgTable("collections", {
     .notNull()
     .references(() => TB_users.id),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
-  videoCount: integer("video_count").notNull().default(0),
+  videoCount: integer("video_count").notNull().default(0), // Kinda unused rn
 });
 
 export const TB_metadata = pgTable("metadata", {

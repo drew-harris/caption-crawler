@@ -3,6 +3,7 @@ import { createAuth } from "./auth";
 import type { Client as TSClient } from "typesense";
 import { Queue } from "bullmq";
 import { PossibleJob } from "shared/types";
+import { Redis } from "ioredis";
 
 type User = {
   id: string;
@@ -20,6 +21,7 @@ declare module "hono" {
       user?: User;
       queue: Queue<PossibleJob>;
       typesense: TSClient;
+      redis: Redis;
     };
   }
 }

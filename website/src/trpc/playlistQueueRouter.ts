@@ -29,6 +29,7 @@ export const playlistQueueRouter = router({
   queuePlaylist: autoUserProcedure
     .input(z.object({ url: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      logger.info({ url: input.url }, "Queueing playlist");
       const playlistId = getPlaylistIdFromUrl(input.url);
       const metadata = await getPlaylistMetadata({
         db: ctx.db,
@@ -101,6 +102,8 @@ export const playlistQueueRouter = router({
         });
       }
 
+      await ctx.redis.set(`jobwith:${collection.id}`, job.id);
+
       return {
         jobId: job.id,
         collection: collection,
@@ -110,9 +113,34 @@ export const playlistQueueRouter = router({
     }),
 
   jobStatus: publicProcedure
-    .input(z.object({ jobId: z.string() }))
+    .input(
+      z.object({
+        jobId: z.string().optional(),
+        collectionId: z.string().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      const job = await ctx.queue.getJob(input.jobId);
+      let jobId = input.jobId;
+
+      if (!jobId && input.collectionId) {
+        const jobId = ctx.redis.get(`jobwith:${input.collectionId}`);
+        if (!jobId) {
+          return null;
+        }
+      } else if (!jobId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Must provide either jobId or collectionId",
+        });
+      }
+      if (!jobId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Must provide either jobId or collectionId",
+        });
+      }
+
+      const job = await ctx.queue.getJob(jobId);
       if (!job) {
         return null;
       }

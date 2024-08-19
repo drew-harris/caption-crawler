@@ -1,4 +1,5 @@
 import { serve } from "@hono/node-server";
+import Redis from "ioredis";
 import { trpcServer } from "@hono/trpc-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { appRouter } from "./trpc/app";
@@ -41,6 +42,13 @@ const typesense = new TSClient({
   apiKey: env.TYPESENSE_API_KEY,
 });
 
+const redis = new Redis({
+  host: env.REDIS_HOST,
+  password: env.REDIS_PASSWORD,
+  port: 6379,
+  keyPrefix: "cc-data",
+});
+
 server.use("/assets/*", serveStatic({ root: "./dist/public" }));
 server.use("/favicon.ico", serveStatic({ path: "./dist/public/favicon.ico" }));
 
@@ -49,6 +57,7 @@ server.use("*", async (c, next) => {
   c.set("auth", auth);
   c.set("queue", ingestQueue);
   c.set("typesense", typesense);
+  c.set("redis", redis);
   await next();
 });
 
@@ -67,7 +76,8 @@ server.use(
         queue: ingestQueue,
         user: c.var["user"],
         baseRequest: c,
-        typesense: typesense,
+        typesense,
+        redis,
       } satisfies TRPCContext;
     },
     onError({ error }) {
