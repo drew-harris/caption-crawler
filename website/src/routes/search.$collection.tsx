@@ -2,6 +2,7 @@ import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { RouterOutput, trpc } from "~/internal/trpc";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
+import { SearchResultCard } from "~/components/SearchResultCard"; // Add this import
 
 type JobResponse = RouterOutput["playlistQueue"]["jobStatus"];
 
@@ -66,26 +67,7 @@ function SearchPage() {
       {searchData?.hits && (
         <div className="w-full max-w-[600px] mt-4 space-y-4">
           {searchData.hits.map((hit) => (
-            <div
-              key={hit.document.id}
-              className="bg-white rounded-lg shadow-md p-4 flex"
-            >
-              <div className="w-40 h-24 flex-shrink-0 mr-4">
-                <img
-                  src={hit.document.thumbnailUrl}
-                  alt={hit.document.videoTitle}
-                  className="w-full h-full object-cover rounded-md"
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-navy font-bold text-[18px] mb-2 truncate">
-                  {hit.document.videoTitle}
-                </div>
-                <div className="text-[14px] text-gray-700 mb-2">
-                  {hit.document.content}
-                </div>
-              </div>
-            </div>
+            <SearchResultCard key={hit.document.id} hit={hit} />
           ))}
         </div>
       )}

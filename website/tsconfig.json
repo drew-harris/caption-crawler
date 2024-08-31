@@ -11,7 +11,8 @@
     "paths": {
       "~/*": [
         "./src/*"
-      ]
+      ],
+      "@/*": ["./src/*"]
     },
     "rootDir": ".",
     "sourceMap": true,
@@ -43,6 +44,7 @@
       "vite/client"
     ],
     "allowImportingTsExtensions": true,
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "baseUrl": ".",
   }
 }
