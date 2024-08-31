@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { TypesenseMoment } from "shared/types";
 import { motion, AnimatePresence } from "framer-motion";
+import { RouterOutput } from "~/internal/trpc";
+
+type SearchHit = NonNullable<RouterOutput["search"]["search"]["hits"]>[0];
 
 interface SearchResultCardProps {
-  hit: {
-    document: TypesenseMoment;
-  };
+  hit: SearchHit;
 }
 
 export function SearchResultCard({ hit }: SearchResultCardProps) {
@@ -14,7 +15,7 @@ export function SearchResultCard({ hit }: SearchResultCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <div className="flex mb-4">
-        <div className="w-40 h-24 flex-shrink-0 mr-4">
+        <div className="w-32 h-18 flex-shrink-0 mr-4">
           <img
             src={hit.document.thumbnailUrl}
             alt={hit.document.videoTitle}
@@ -27,9 +28,12 @@ export function SearchResultCard({ hit }: SearchResultCardProps) {
           </div>
         </div>
       </div>
-      <div className="text-[14px] text-gray-700 mb-4">
-        {hit.document.content}
-      </div>
+      <div
+        className="text-[14px] text-gray-700 mb-4"
+        dangerouslySetInnerHTML={{
+          __html: hit.highlight.content?.value || hit.document.content,
+        }}
+      />
 
       <button
         className="w-full bg-gray-100 text-gray-700 py-2 rounded-md hover:bg-gray-200 transition-colors flex items-center justify-center"
