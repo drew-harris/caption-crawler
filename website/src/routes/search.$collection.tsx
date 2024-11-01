@@ -57,6 +57,9 @@ function SearchPage() {
       <div className="font-medium text-[13px] opacity-50">
         Last updated: {timeSince} ago
       </div>
+      <div className="font-medium text-[13px] opacity-50">
+        {collection.videoCount} videos
+      </div>
       <div className="h-3" />
       <input
         value={searchQuery}
