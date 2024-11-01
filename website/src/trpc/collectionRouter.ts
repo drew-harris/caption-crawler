@@ -8,8 +8,7 @@ export const collectionRouter = router({
     const collections = await ctx.db
       .select()
       .from(TB_collections)
-      .where(eq(TB_collections.createdBy, ctx.user.id))
-      .orderBy(TB_collections.createdAt.desc());
+      .where(eq(TB_collections.createdBy, ctx.user.id));
     return collections;
   }),
   getCollection: publicProcedure
