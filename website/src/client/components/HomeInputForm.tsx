@@ -60,7 +60,13 @@ export function HomeInputForm() {
     },
     onError(error, variables, context) {
       if (error.message.includes("playlist limit")) {
-        setError("You've reached your playlist limit. Please upgrade to add more playlists.");
+        if (confirm("You've reached your playlist limit. Would you like to upgrade to add more playlists?")) {
+          stripeCheckoutMutation.mutate(undefined, {
+            onSuccess: ({ url }) => {
+              if (url) window.location.href = url;
+            },
+          });
+        }
       } else {
         setError(error.message || "Something went wrong");
       }

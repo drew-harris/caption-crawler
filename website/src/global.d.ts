@@ -13,6 +13,7 @@ type User = {
   createdAt: Date;
   playlistCount: number;
   playlistLimit: number;
+  email: string;
 };
 
 declare module "hono" {

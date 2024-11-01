@@ -14,6 +14,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
     STRIPE_PRICE_ID: z.string(),
+    PUBLIC_URL: z.string().url(),
   },
 
   runtimeEnv: process.env,
