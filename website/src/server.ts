@@ -85,6 +85,7 @@ server.post("/api/webhook", async (c) => {
       const userId = session.metadata?.userId;
 
       if (userId) {
+        logger.info({ userId }, "Upgrading user to pro status");
         await c.var.db
           .update(TB_users)
           .set({ 

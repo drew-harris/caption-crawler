@@ -3,6 +3,8 @@ import { FormEvent, useState } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
 import { trpc } from "~/internal/trpc";
 
+const stripeCheckoutMutation = trpc.stripe.createCheckoutSession.useMutation();
+
 export function HomeInputForm() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
