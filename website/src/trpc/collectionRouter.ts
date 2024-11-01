@@ -23,8 +23,7 @@ export const collectionRouter = router({
       })
       .from(TB_collections)
       .innerJoin(TB_metadata, eq(TB_collections.youtubeId, TB_metadata.id))
-      .where(eq(TB_collections.createdBy, ctx.user.id))
-      .orderBy(TB_collections.createdAt.desc());
+      .where(eq(TB_collections.createdBy, ctx.user.id));
     return collections;
   }),
   getCollection: publicProcedure

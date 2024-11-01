@@ -11,11 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './../routes/__root'
+import { Route as PlaylistsImport } from './../routes/playlists'
 import { Route as IndexImport } from './../routes/index'
 import { Route as AdminIndexImport } from './../routes/admin.index'
 import { Route as SearchCollectionImport } from './../routes/search.$collection'
 
 // Create/Update Routes
+
+const PlaylistsRoute = PlaylistsImport.update({
+  path: '/playlists',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
@@ -43,6 +49,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/playlists': {
+      id: '/playlists'
+      path: '/playlists'
+      fullPath: '/playlists'
+      preLoaderRoute: typeof PlaylistsImport
+      parentRoute: typeof rootRoute
+    }
     '/search/$collection': {
       id: '/search/$collection'
       path: '/search/$collection'
@@ -64,6 +77,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
+  PlaylistsRoute,
   SearchCollectionRoute,
   AdminIndexRoute,
 })
@@ -77,12 +91,16 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/playlists",
         "/search/$collection",
         "/admin/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/playlists": {
+      "filePath": "playlists.tsx"
     },
     "/search/$collection": {
       "filePath": "search.$collection.tsx"

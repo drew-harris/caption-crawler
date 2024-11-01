@@ -12,14 +12,14 @@ function PlaylistsPage() {
 
   return (
     <div className="flex flex-col pt-10 items-center">
-      <h1 className="text-3xl font-bold text-navy mb-8">All Playlists</h1>
+      <h1 className="text-3xl font-bold text-navy mb-8">Your Playlists</h1>
       <div className="w-full max-w-[800px] space-y-4">
         {collections?.map((collection) => (
           <Link
             key={collection.id}
             to="/search/$collection"
             params={{ collection: collection.id }}
-            className="block p-4 border-2 border-tan-200 rounded-lg hover:border-tan-300 transition-colors"
+            className="block p-4 border-2 border-tan-200 bg-white rounded-lg hover:border-tan-300 transition-colors"
           >
             <div className="flex items-center gap-4">
               <img
