@@ -1,4 +1,4 @@
-import { Outlet } from "@tanstack/react-router";
+import { Link, Outlet } from "@tanstack/react-router";
 import { ReactNode } from "react";
 import { Navbar } from "~/client/Navbar";
 
