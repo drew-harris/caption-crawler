@@ -11,7 +11,9 @@ export const youtubeRouter = router({
         query: z.string(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      const redis = ctx.redis;
+
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&q=${encodeURIComponent(
           input.query,
