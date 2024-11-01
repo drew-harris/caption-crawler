@@ -74,7 +74,7 @@ export function HomeInputForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mt-8 px-4">
-      <div className="relative flex bg-white rounded-[4px] shadow-sm">
+      <div className="relative flex bg-white border border-tan-200 rounded-[4px] shadow-sm">
         <input
           value={input}
           onChange={(e) => {
