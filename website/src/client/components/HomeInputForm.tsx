@@ -15,7 +15,10 @@ export function HomeInputForm() {
     },
   );
 
-  const playlistInfoMutation = trpc.youtube.getPlaylistInfo.useMutation();
+  const playlistInfoQuery = trpc.youtube.getPlaylistInfo.useQuery(
+    { playlistUrl: input },
+    { enabled: false }
+  );
 
   function isValidUrl(str: string) {
     try {
@@ -33,12 +36,11 @@ export function HomeInputForm() {
 
     if (isValidUrl(input)) {
       try {
-        const info = await playlistInfoMutation.mutateAsync({
-          playlistUrl: input,
-        });
+        const info = await playlistInfoQuery.refetch();
+        if (!info.data) throw new Error("No playlist info returned");
         navigate({
           to: "/search/$collection",
-          params: { collection: info.id },
+          params: { collection: info.data.id },
         });
       } catch (error) {
         console.error("Failed to process playlist URL:", error);
