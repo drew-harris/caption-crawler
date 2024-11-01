@@ -17,6 +17,12 @@ export const youtubeRouter = router({
           input.query,
         )}&key=${env.YOUTUBE_API_KEY}&maxResults=5`,
       );
+
+      if (!response.ok) {
+        console.error(await response.text());
+        throw new Error("Failed to fetch search results");
+      }
+
       const data =
         (await response.json()) as youtube_v3.Schema$SearchListResponse;
       if (!data.items) {
