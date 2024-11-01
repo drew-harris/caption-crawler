@@ -52,6 +52,9 @@ importers:
 
   website:
     dependencies:
+      '@googleapis/youtube':
+        specifier: ^20.0.0
+        version: 20.0.0
       '@hono/node-server':
         specifier: ^1.11.3
         version: 1.11.3
@@ -69,10 +72,10 @@ importers:
         version: 1.3.0(react@18.3.1)
       '@ssrx/plugin-tanstack-router':
         specifier: latest
-        version: 0.3.0(@tanstack/react-router@1.38.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 0.4.2(@tanstack/react-router@1.38.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(hono@4.4.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@ssrx/react':
         specifier: latest
-        version: 0.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+        version: 0.4.1(hono@4.4.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@ssrx/renderer':
         specifier: ^0.4.1
         version: 0.4.1(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
@@ -81,7 +84,7 @@ importers:
         version: 0.2.0
       '@ssrx/vite':
         specifier: latest
-        version: 0.6.1(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+        version: 0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@t3-oss/env-core':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.4.5)(zod@3.23.8)
@@ -1226,9 +1229,19 @@ packages:
     resolution: {integrity: sha512-tgJsqmeNz7w9bd0nUwxWyXp14k8Zjs5/4MCb73tL4pk9NLjxnPbtl12A8W0eCLVkRm5ODbkw8LmNsABIOHZZBg==}
     engines: {node: '>=12.0.0'}
 
+  '@googleapis/youtube@20.0.0':
+    resolution: {integrity: sha512-wdt1J0JoKYhvpoS2XIRHX0g/9ul/B0fQeeJAhuuBIdYINuuLt6/oZYZZCBmkuhtkA3IllXgqgAXOjLtLRAnR2g==}
+    engines: {node: '>=12.0.0'}
+
   '@hono/node-server@1.11.3':
     resolution: {integrity: sha512-mFg3qlKkDtMWSalX5Gyh6Zd3MXay0biGobFlyJ49i6R1smBBS1CYkNZbvwLlw+4sSrHO4ZiH7kj4TcLpl2Jr3g==}
     engines: {node: '>=18.14.1'}
+
+  '@hono/node-server@1.13.4':
+    resolution: {integrity: sha512-3tW9lC0+2mRmoGUEnq0d8Pi3SToWjg8flM9Z+h5Aamy23jjpiFr7n3/HLqXve6EudOsgN2tG2hZusqzNYVRmRw==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      hono: ^4
 
   '@hono/trpc-server@0.3.1':
     resolution: {integrity: sha512-2FgDUv6ngrDA8pu/hb8hTqUyEgsT7PbYriTVKJoYxlqW8nnCqubruZ/14IQ/MCkBPXKVefnqUCJNAytW1Su++A==}
@@ -2003,13 +2016,15 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
-  '@ssrx/plugin-tanstack-router@0.3.0':
-    resolution: {integrity: sha512-tBkDFKRT9PUEbOVNCOBQZXdu2WXnYdvxKr7OBwIsdrFOVLa3JYuIj1C5WjclWtZTycIMwp6TwVeTy7gN2gfD7g==}
+  '@ssrx/plugin-tanstack-router@0.4.2':
+    resolution: {integrity: sha512-fDLL2WDtbN9RjBLg0Rki5ZCTOIgCkxaKt/MJsINVhnmxt3jBwat5qNgaXMaXo+hSL2CsoTEDnX+DIoxe7bB/Vw==}
     peerDependencies:
-      '@tanstack/react-router': '>=1'
+      '@tanstack/react-router': '>=1.57'
+      react: '>=18'
+      react-dom: '>=18'
 
-  '@ssrx/react@0.3.1':
-    resolution: {integrity: sha512-J+ewYBDofJ6r7n0cXdMVSYjccwZAAnxMOEyL7wL5xP1mP4Sj72tbdI1GJ6VF4M0u+crbC80OYaFtbZ1ZHP2QMw==}
+  '@ssrx/react@0.4.1':
+    resolution: {integrity: sha512-CfeYmn/024UFdW/kg1Q2H88lw4bM/3Yc77tObpgrtee54DaTlAEgCz/fQvf/KZ+oxgx51MNjMoyXxLCEYbwkrg==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -2017,11 +2032,22 @@ packages:
   '@ssrx/renderer@0.4.1':
     resolution: {integrity: sha512-kn3UN4XCyG707gVcfsOG757Ai0cfTxIct/nO/xOlFK+HJobFfhAhH29vbmGdKIhWjRqbdb+9ckrDa9DfJ2kxVQ==}
 
+  '@ssrx/renderer@0.5.1':
+    resolution: {integrity: sha512-cBt48ivsu0KNVHYx/RkyxYaUJxLCfnxSFcyXNiTeiAqntPHuLPpNKTV0u6IG7TzLAN6OJIZdY86+0+vK9D/aAQ==}
+
   '@ssrx/streaming@0.2.0':
     resolution: {integrity: sha512-HAMjqTWD/Phg0xI6jQGwlFEVxGc9+qXnRSFQNuV9EoOsMfeoxeJy2oZj6ZM9PNijB6RfKFc1r3hak4yagEzh/Q==}
 
+  '@ssrx/streaming@0.3.1':
+    resolution: {integrity: sha512-h4+BSLd3g5ftBW/DcR71CnuXi1jqdGHSd55Ow7qVpCsRseelkbxCm0j9ZPqGMYDZjMvSB7cXD7w0OebMgGe4kQ==}
+
   '@ssrx/vite@0.6.1':
     resolution: {integrity: sha512-4ytTAwkACQ15WuRxL2ji0x1t4PPFlSE+bym6mJpDAa7lvfw4SrNLEGda/YO9htB30vVYyLx0zu962mJNll+Dlw==}
+    peerDependencies:
+      vite: '>=4'
+
+  '@ssrx/vite@0.7.2':
+    resolution: {integrity: sha512-ddo1u2gb4EcJCtDXkh68b7KnRVHO/3y0CA21svTktR2F+EpBqvL2SpjipNYq60zMsKLBpV2XiKNnEO+d/qD27w==}
     peerDependencies:
       vite: '>=4'
 
@@ -2046,6 +2072,12 @@ packages:
 
   '@tanstack/react-cross-context@1.26.10':
     resolution: {integrity: sha512-zZVwoaYlbffB6yyThBgoy/i+G8vScl5mvuhTaN34Pj1WXvnsIv3GyZIHS8RBvRd8geoOs7WucpYtU1pXQrTwdA==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+
+  '@tanstack/react-cross-context@1.57.6':
+    resolution: {integrity: sha512-TarQ/WX+uVQ3t8aK4GYUQ4uZ+zAG67hn9vGNp2vtsy0UdOhgHdXf30bi8lR6GsHrZMuS/Z/TlXqqngqBnTwF5A==}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -2402,6 +2434,9 @@ packages:
 
   b4a@1.6.6:
     resolution: {integrity: sha512-5Tk1HLk6b6ctmjIkAcU/Ujv/1WqiDl0F0JdRCR80VsOcUlHcu7pWeWRlOqQLHfDEsVx9YH/aif5AG4ehoCtTmg==}
+
+  babel-dead-code-elimination@1.0.6:
+    resolution: {integrity: sha512-JxFi9qyRJpN0LjEbbjbN8g0ux71Qppn9R8Qe3k6QzHg2CaKsbUQtbn307LQGiDLGjV6JCtEFqfxzVig9MyDCHQ==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -3201,6 +3236,7 @@ packages:
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
@@ -3229,6 +3265,7 @@ packages:
   google-p12-pem@4.0.1:
     resolution: {integrity: sha512-WPkN4yGtz05WZ5EhtlxNDWPhC4JIic6G8ePitwUWy4l+XPVYec+a0j0Ts47PDtW59y3RwAhUd9/h9ZZ63px6RQ==}
     engines: {node: '>=12.0.0'}
+    deprecated: Package is no longer maintained
     hasBin: true
 
   googleapis-common@6.0.4:
@@ -3340,6 +3377,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -4783,6 +4821,11 @@ packages:
     resolution: {integrity: sha512-ASEpiwldZIsViv2/ZlO6qnRhDAwxr92nKXxMOinA+5nCY7nlaKgekaLDjTyUmFzB8DSiXVZqmHnd6OZVkn4vzw==}
     hasBin: true
 
+  vite-env-only@3.0.3:
+    resolution: {integrity: sha512-iAb7cTXRrvFShaF1n+G8f6Yqq7sRJcxipNYNQQu0DN5N9P55vJMmLG5lNU5moYGpd+ZH1WhBHdkWi5WjrfImHg==}
+    peerDependencies:
+      vite: '*'
+
   vite-node@1.6.0:
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -5609,7 +5652,18 @@ snapshots:
       - encoding
       - supports-color
 
+  '@googleapis/youtube@20.0.0':
+    dependencies:
+      googleapis-common: 7.1.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
   '@hono/node-server@1.11.3': {}
+
+  '@hono/node-server@1.13.4(hono@4.4.6)':
+    dependencies:
+      hono: 4.4.6
 
   '@hono/trpc-server@0.3.1(@trpc/server@11.0.0-rc.366)(hono@4.4.6)':
     dependencies:
@@ -6257,19 +6311,33 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@ssrx/plugin-tanstack-router@0.3.0(@tanstack/react-router@1.38.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@ssrx/plugin-tanstack-router@0.4.2(@tanstack/react-router@1.38.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(hono@4.4.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
     dependencies:
+      '@ssrx/renderer': 0.5.1(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      '@tanstack/react-cross-context': 1.57.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-router': 1.38.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      jsesc: 3.0.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      tiny-invariant: 1.3.3
+      vite-env-only: 3.0.3(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+    transitivePeerDependencies:
+      - hono
+      - supports-color
+      - vite
 
-  '@ssrx/react@0.3.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
+  '@ssrx/react@0.4.1(hono@4.4.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
     dependencies:
-      '@ssrx/renderer': 0.4.1(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
-      '@ssrx/streaming': 0.2.0
-      '@ssrx/vite': 0.6.1(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      '@ssrx/renderer': 0.5.1(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      '@ssrx/streaming': 0.3.1
+      '@ssrx/vite': 0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       isbot-fast: 1.2.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+      vite-env-only: 3.0.3(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
     transitivePeerDependencies:
+      - hono
+      - supports-color
       - vite
 
   '@ssrx/renderer@0.4.1(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
@@ -6280,13 +6348,36 @@ snapshots:
     transitivePeerDependencies:
       - vite
 
+  '@ssrx/renderer@0.5.1(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
+    dependencies:
+      '@ssrx/streaming': 0.3.1
+      '@ssrx/vite': 0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      deepmerge: 4.3.1
+      vite-env-only: 3.0.3(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+    transitivePeerDependencies:
+      - hono
+      - supports-color
+      - vite
+
   '@ssrx/streaming@0.2.0': {}
+
+  '@ssrx/streaming@0.3.1': {}
 
   '@ssrx/vite@0.6.1(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
     dependencies:
       '@hono/node-server': 1.11.3
       radix3: 1.1.2
       vite: 5.3.1(@types/node@20.14.5)(terser@5.31.0)
+
+  '@ssrx/vite@0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
+    dependencies:
+      '@hono/node-server': 1.13.4(hono@4.4.6)
+      radix3: 1.1.2
+      vite: 5.3.1(@types/node@20.14.5)(terser@5.31.0)
+      vite-env-only: 3.0.3(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+    transitivePeerDependencies:
+      - hono
+      - supports-color
 
   '@t3-oss/env-core@0.10.1(typescript@5.4.5)(zod@3.23.8)':
     dependencies:
@@ -6301,6 +6392,11 @@ snapshots:
   '@tanstack/query-devtools@5.37.1': {}
 
   '@tanstack/react-cross-context@1.26.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@tanstack/react-cross-context@1.57.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -6828,6 +6924,15 @@ snapshots:
       - debug
 
   b4a@1.6.6: {}
+
+  babel-dead-code-elimination@1.0.6:
+    dependencies:
+      '@babel/core': 7.24.5
+      '@babel/parser': 7.24.5
+      '@babel/traverse': 7.24.5
+      '@babel/types': 7.24.5
+    transitivePeerDependencies:
+      - supports-color
 
   balanced-match@1.0.2: {}
 
@@ -9438,6 +9543,19 @@ snapshots:
       - terser
       - uWebSockets.js
       - xml2js
+
+  vite-env-only@3.0.3(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0)):
+    dependencies:
+      '@babel/core': 7.24.5
+      '@babel/generator': 7.24.5
+      '@babel/parser': 7.24.5
+      '@babel/traverse': 7.24.5
+      '@babel/types': 7.24.5
+      babel-dead-code-elimination: 1.0.6
+      micromatch: 4.0.5
+      vite: 5.3.1(@types/node@20.14.5)(terser@5.31.0)
+    transitivePeerDependencies:
+      - supports-color
 
   vite-node@1.6.0(@types/node@20.14.5)(terser@5.31.0):
     dependencies:

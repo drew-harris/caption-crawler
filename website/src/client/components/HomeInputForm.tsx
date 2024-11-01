@@ -1,9 +1,11 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { trpc } from "~/internal/trpc";
 
 export function HomeInputForm() {
   const [input, setInput] = useState("");
+  const [error, setError] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const navigate = useNavigate();
 
@@ -17,8 +19,10 @@ export function HomeInputForm() {
 
   const playlistInfoQuery = trpc.youtube.getPlaylistInfo.useQuery(
     { playlistUrl: input },
-    { enabled: false }
+    { enabled: false },
   );
+
+  const utils = trpc.useUtils();
 
   function isValidUrl(str: string) {
     try {
@@ -29,24 +33,44 @@ export function HomeInputForm() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  const submitPlaylistMutation = trpc.playlistQueue.queuePlaylist.useMutation({
+    onSuccess(data, variables, context) {
+      // Preset the required metadata
+      utils.metadata.getMetadataFromCollection.setData(
+        { collectionId: data.collection.id },
+        data.metadata,
+      );
+      utils.collections.getCollection.setData(
+        { collectionId: data.collection.id },
+        data.collection,
+      );
+      navigate({
+        to: "/search/$collection",
+        params: {
+          collection: data.collection.id,
+        },
+        search: {
+          j: data.jobId,
+        },
+      });
+    },
+    onError(error, variables, context) {
+      setError(error.message || "Something went wrong");
+    },
+  });
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    if (!input) return;
-
-    if (isValidUrl(input)) {
-      try {
-        const info = await playlistInfoQuery.refetch();
-        if (!info.data) throw new Error("No playlist info returned");
-        navigate({
-          to: "/search/$collection",
-          params: { collection: info.data.id },
-        });
-      } catch (error) {
-        console.error("Failed to process playlist URL:", error);
-      }
+    // Verify inputText is a url
+    if (!input.match(/^https?:\/\//)) {
+      alert("Please enter a valid URL");
+      return;
     }
-  }
+
+    submitPlaylistMutation.mutate({
+      url: input,
+    });
+  };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mt-8 px-4">
@@ -69,18 +93,19 @@ export function HomeInputForm() {
               <button
                 key={playlist.id}
                 onClick={() => {
-                  navigate({
-                    to: "/search/$collection",
-                    params: { collection: playlist.id },
+                  submitPlaylistMutation.mutate({
+                    url: `https://www.youtube.com/playlist?list=${playlist.id}`,
                   });
                 }}
                 className="bg-strong-blue hover:bg-strong-blue/95 placeholder:text-[#939393] px-[31.5px] text-white hidden md:inline rounded-tr-[4px] rounded-br-[4px]"
               >
-                <img
-                  src={playlist.thumbnailUrl}
-                  alt=""
-                  className="w-12 h-12 object-cover rounded"
-                />
+                {playlist.thumbnailUrl && (
+                  <img
+                    src={playlist.thumbnailUrl}
+                    alt=""
+                    className="w-12 h-12 object-cover rounded"
+                  />
+                )}
                 <div className="flex-1 min-w-0">
                   <div className="font-medium truncate">{playlist.title}</div>
                   <div className="text-sm text-gray-500 truncate">
