@@ -75,6 +75,14 @@ export const handlePlaylistIngest = async (
 
   logger.info({ amount: inserted.length }, "Inserted videos");
 
+  // Update the final video count to reflect actual inserted videos
+  await deps.db
+    .update(TB_collections)
+    .set({
+      videoCount: currentVideoIds.length + inserted.length,
+    })
+    .where(eq(TB_collections.id, job.data.collection.id));
+
   // Delete the redis key
   await deps.redis.del(`jobwith:${job.data.collection.id}`);
 
