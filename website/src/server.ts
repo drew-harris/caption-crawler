@@ -9,6 +9,8 @@ import postgres from "postgres";
 import { Hono } from "hono";
 import { PossibleJob } from "shared/types";
 import { drizzle } from "drizzle-orm/postgres-js";
+import { TB_users } from "db";
+import { eq } from "drizzle-orm";
 import { createAuth } from "./auth";
 import { env } from "./env";
 import { authMiddleware } from "./auth/middleware";
@@ -16,6 +18,7 @@ import { Client as TSClient } from "typesense";
 import { TRPCContext } from "./trpc/base";
 import { eiRoutes } from "~/eisearch";
 import { logger } from "~/logging";
+import Stripe from "stripe";
 
 const server = new Hono();
 
@@ -64,6 +67,40 @@ server.use("*", async (c, next) => {
 server.use("*", authMiddleware);
 
 server.route("/ei", eiRoutes);
+
+server.post("/api/webhook", async (c) => {
+  const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+  const sig = c.req.header("stripe-signature");
+  const body = await c.req.text();
+  
+  try {
+    const event = stripe.webhooks.constructEvent(
+      body,
+      sig!,
+      env.STRIPE_WEBHOOK_SECRET
+    );
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const userId = session.metadata?.userId;
+
+      if (userId) {
+        await c.var.db
+          .update(TB_users)
+          .set({ 
+            isPro: true,
+            playlistLimit: 100
+          })
+          .where(eq(TB_users.id, userId));
+      }
+    }
+
+    return c.json({ received: true });
+  } catch (err) {
+    logger.error(err, "Error processing Stripe webhook");
+    return c.json({ error: (err as Error).message }, 400);
+  }
+});
 
 server.use(
   "/trpc/*",
