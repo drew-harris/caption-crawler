@@ -1,4 +1,4 @@
-import { renderAssets } from "@ssrx/react/server";
+import { renderAssets } from "@ssrx/react";
 import { assetsForRequest } from "@ssrx/vite/runtime";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { RouterProvider, createMemoryHistory } from "@tanstack/react-router";
