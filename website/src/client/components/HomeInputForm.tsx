@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { FormEvent, useState } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
@@ -14,7 +13,10 @@ export function HomeInputForm() {
   const searchMutation = trpc.youtube.searchPlaylists.useQuery(
     { query: debouncedInput },
     {
-      enabled: isSearching && !isValidUrl(debouncedInput) && debouncedInput.length >= 3,
+      enabled:
+        isSearching &&
+        !isValidUrl(debouncedInput) &&
+        debouncedInput.length >= 3,
       staleTime: 1000 * 60 * 5, // 5 minutes
     },
   );
