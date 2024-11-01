@@ -4,6 +4,13 @@ import { z } from "zod";
 import { publicProcedure, router } from "~/trpc/base";
 
 export const collectionRouter = router({
+  getAllCollections: publicProcedure.query(async ({ ctx }) => {
+    const collections = await ctx.db
+      .select()
+      .from(TB_collections)
+      .orderBy(TB_collections.createdAt.desc());
+    return collections;
+  }),
   getCollection: publicProcedure
     .input(
       z.object({
