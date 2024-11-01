@@ -88,7 +88,7 @@ export function HomeInputForm() {
         />
 
         {isSearching && searchMutation.data && (
-          <div className="absolute w-full bg-white shadow-lg rounded-b-lg mt-1 border border-gray-200 max-h-[300px] overflow-y-auto z-10">
+          <div className="absolute left-0 right-0 top-full bg-white shadow-lg rounded-b-lg mt-1 border border-gray-200 max-h-[300px] overflow-y-auto z-10">
             {searchMutation.data.map((playlist) => (
               <button
                 key={playlist.id}
@@ -97,13 +97,13 @@ export function HomeInputForm() {
                     url: `https://www.youtube.com/playlist?list=${playlist.id}`,
                   });
                 }}
-                className="bg-strong-blue hover:bg-strong-blue/95 placeholder:text-[#939393] px-[31.5px] text-white hidden md:inline rounded-tr-[4px] rounded-br-[4px]"
+                className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 text-left"
               >
                 {playlist.thumbnailUrl && (
                   <img
                     src={playlist.thumbnailUrl}
                     alt=""
-                    className="w-12 h-12 object-cover rounded"
+                    className="w-12 h-12 object-cover rounded flex-shrink-0"
                   />
                 )}
                 <div className="flex-1 min-w-0">
