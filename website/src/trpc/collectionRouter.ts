@@ -1,13 +1,14 @@
 import { TB_collections } from "db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { publicProcedure, router } from "~/trpc/base";
+import { publicProcedure, router, autoUserProcedure } from "~/trpc/base";
 
 export const collectionRouter = router({
-  getAllCollections: publicProcedure.query(async ({ ctx }) => {
+  getAllCollections: autoUserProcedure.query(async ({ ctx }) => {
     const collections = await ctx.db
       .select()
       .from(TB_collections)
+      .where(eq(TB_collections.createdBy, ctx.user.id))
       .orderBy(TB_collections.createdAt.desc());
     return collections;
   }),
