@@ -13,3 +13,4 @@ yarn.lock
 bun.lockb
 .env
 worker-configuration.d.ts
+.aider*
