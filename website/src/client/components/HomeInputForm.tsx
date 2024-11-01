@@ -59,7 +59,11 @@ export function HomeInputForm() {
       });
     },
     onError(error, variables, context) {
-      setError(error.message || "Something went wrong");
+      if (error.message.includes("playlist limit")) {
+        setError("You've reached your playlist limit. Please upgrade to add more playlists.");
+      } else {
+        setError(error.message || "Something went wrong");
+      }
     },
   });
 

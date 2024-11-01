@@ -11,6 +11,8 @@ type User = {
   isPro: boolean;
   isAdmin: boolean;
   createdAt: Date;
+  playlistCount: number;
+  playlistLimit: number;
 };
 
 declare module "hono" {

@@ -11,6 +11,9 @@ export const env = createEnv({
     QUEUE_NAME: z.string(),
     TYPESENSE_HOST: z.string(),
     TYPESENSE_API_KEY: z.string(),
+    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_WEBHOOK_SECRET: z.string(),
+    STRIPE_PRICE_ID: z.string(),
   },
 
   runtimeEnv: process.env,

@@ -29,6 +29,14 @@ export const playlistQueueRouter = router({
   queuePlaylist: autoUserProcedure
     .input(z.object({ url: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      // Check user playlist limits
+      if (ctx.user.playlistCount >= ctx.user.playlistLimit) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You have reached your playlist limit. Please upgrade to add more playlists.",
+        });
+      }
+
       logger.info({ url: input.url }, "Queueing playlist");
       const playlistId = getPlaylistIdFromUrl(input.url);
       const metadata = await getPlaylistMetadata({
