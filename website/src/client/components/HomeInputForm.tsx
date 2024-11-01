@@ -74,7 +74,7 @@ export function HomeInputForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mt-8 px-4">
-      <div className="relative">
+      <div className="relative flex bg-white rounded-[4px] shadow-sm">
         <input
           value={input}
           onChange={(e) => {
@@ -84,7 +84,7 @@ export function HomeInputForm() {
             );
           }}
           placeholder="Enter a YouTube playlist URL or search for playlists..."
-          className="bg-transparent overflow-hidden focus:outline-none group w-full p-[10px] text-[14px]"
+          className="flex-1 overflow-hidden focus:outline-none group w-full p-[10px] text-[14px] rounded-l-[4px]"
         />
 
         {isSearching && searchMutation.data && (
@@ -119,23 +119,9 @@ export function HomeInputForm() {
 
         <button
           type="submit"
-          className="bg-strong-blue hover:bg-strong-blue/95 placeholder:text-[#939393] px-[31.5px] text-white hidden md:inline rounded-tr-[4px] rounded-br-[4px]"
+          className="bg-strong-blue hover:bg-strong-blue/95 px-[31.5px] text-white rounded-tr-[4px] rounded-br-[4px]"
         >
           Scan
-        </button>
-        <button
-          type="button"
-          className="md:hidden border-l-tan-200 border-l-2 text-[14px] text-[#9a9a9a] px-[10px]"
-          onClick={async () => {
-            try {
-              const text = await navigator.clipboard.readText();
-              setInput(text);
-            } catch (e) {
-              alert("Could not paste text, sorry");
-            }
-          }}
-        >
-          Paste
         </button>
       </div>
     </form>
