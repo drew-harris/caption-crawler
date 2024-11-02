@@ -106,11 +106,11 @@ export function HomeInputForm() {
             );
           }}
           placeholder="Enter a YouTube playlist URL or search for playlists..."
-          className="flex-1 overflow-hidden focus:outline-none group w-full p-[10px] text-[14px] rounded-l-[4px]"
+          className="flex-1 overflow-hidden focus:outline-none group w-full p-[10px] pr-12 text-[14px] rounded-l-[4px]"
         />
         {isSearching && searchMutation.isLoading && (
-          <div className="absolute right-24 top-1/2 -translate-y-1/2">
-            <Loader2 className="w-4 h-4 animate-spin text-gray-800" />
+          <div className="absolute right-[100px] top-1/2 -translate-y-1/2 pointer-events-none">
+            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
           </div>
         )}
 
