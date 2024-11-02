@@ -48,6 +48,6 @@
     ],
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",
-    "baseUrl": ".",
+    "baseUrl": "."
   }
 }
