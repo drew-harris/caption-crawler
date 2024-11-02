@@ -4,11 +4,7 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "node_modules/**/*",
-    "**/node_modules/*",
-    "../node_modules/*",
-    "**/node_modules/@ssrx/renderer/**",
+    "**/node_modules/**",
     "./vite.config.ts"
   ],
   "compilerOptions": {
