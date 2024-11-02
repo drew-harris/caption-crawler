@@ -1,0 +1,266 @@
+diff --git a/src/client/handler.tsx b/src/client/handler.tsx
+index e3314db5d95dfb924b151a1523407d157a96c789..08bf23041bd0aedec2635315e0215f13ea996599 100644
+--- a/src/client/handler.tsx
++++ b/src/client/handler.tsx
+@@ -1,5 +1,6 @@
++// @ts-nocheck
+ /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+-import type { Simplify } from 'type-fest';
++import type { Simplify } from "type-fest";
+ 
+ import type {
+   ClientHandlerFn,
+@@ -8,12 +9,19 @@ import type {
+   Config,
+   RenderPlugin,
+   ServerHandlerFn,
+-} from '../types.ts';
++} from "../types.ts";
+ 
+-export function createApp<P extends RenderPlugin<any>[]>({ RootLayout, appRenderer, plugins }: ClientHandlerOpts<P>) {
++export function createApp<P extends RenderPlugin<any>[]>({
++  RootLayout,
++  appRenderer,
++  plugins,
++}: ClientHandlerOpts<P>) {
+   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+-  const req = new Request(`${window.location.pathname}${window.location.search}`);
++  const req = new Request(
++    `${window.location.pathname}${window.location.search}`,
++  );
+ 
++  // @ts-ignore
+   const ctx = new Proxy({} as ExtractPluginsAppContext<P>, {
+     get(_target, prop) {
+       // @ts-expect-error ignore
+@@ -25,7 +33,7 @@ export function createApp<P extends RenderPlugin<any>[]>({ RootLayout, appRender
+ 
+   const serverHandler = (() => {
+     throw new Error(
+-      'The server handler should not be called on the client. Something is wrong, make sure you are not calling `appHandler.server()` in code that is included in the client.',
++      "The server handler should not be called on the client. Something is wrong, make sure you are not calling `appHandler.server()` in code that is included in the client.",
+     );
+   }) as ServerHandlerFn;
+ 
+@@ -33,9 +41,9 @@ export function createApp<P extends RenderPlugin<any>[]>({ RootLayout, appRender
+     const appCtx: Record<string, any> = {};
+ 
+     const commonHooks = {
+-      extendCtx: [] as NonNullable<CommonHooks['extendCtx']>[],
+-      renderApp: [] as NonNullable<CommonHooks['renderApp']>[],
+-      wrapApp: [] as NonNullable<CommonHooks['wrapApp']>[],
++      extendCtx: [] as NonNullable<CommonHooks["extendCtx"]>[],
++      renderApp: [] as NonNullable<CommonHooks["renderApp"]>[],
++      wrapApp: [] as NonNullable<CommonHooks["wrapApp"]>[],
+     };
+ 
+     for (const p of plugins ?? []) {
+@@ -60,11 +68,15 @@ export function createApp<P extends RenderPlugin<any>[]>({ RootLayout, appRender
+     // @ts-expect-error ignore
+     window.__PAGE_CTX__ = { appCtx };
+ 
+-    let AppComp = appRenderer ? await appRenderer({ req, renderProps }) : undefined;
++    let AppComp = appRenderer
++      ? await appRenderer({ req, renderProps })
++      : undefined;
+ 
+     for (const fn of commonHooks.renderApp ?? []) {
+       if (AppComp) {
+-        throw new Error('Only one plugin can implement app:render. app:wrap might be what you are looking for.');
++        throw new Error(
++          "Only one plugin can implement app:render. app:wrap might be what you are looking for.",
++        );
+       }
+ 
+       AppComp = await fn();
+@@ -72,19 +84,21 @@ export function createApp<P extends RenderPlugin<any>[]>({ RootLayout, appRender
+       break;
+     }
+ 
+-    const wrappers: ((props: { children: () => Config['jsxElement'] }) => Config['jsxElement'])[] = [];
++    const wrappers: ((props: {
++      children: () => Config["jsxElement"];
++    }) => Config["jsxElement"])[] = [];
+     for (const fn of commonHooks.wrapApp ?? []) {
+       wrappers.push(fn());
+     }
+ 
+     const renderApp = () => {
+       if (!AppComp) {
+-        throw new Error('No plugin implemented renderApp');
++        throw new Error("No plugin implemented renderApp");
+       }
+ 
+-      let finalApp: Config['jsxElement'];
++      let finalApp: Config["jsxElement"];
+       if (wrappers.length) {
+-        const wrapFn = (w: typeof wrappers): Config['jsxElement'] => {
++        const wrapFn = (w: typeof wrappers): Config["jsxElement"] => {
+           const [child, ...remainingWrappers] = w;
+ 
+           if (!child) return AppComp!();
+@@ -120,18 +134,23 @@ type Flatten<T> = {
+   [K in keyof T]: T[K] extends object ? T[K] : never;
+ }[keyof T];
+ 
+-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
++type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
++  k: infer I,
++) => void
++  ? I
++  : never;
+ 
+ type ExtractPluginsAppContext<T extends RenderPlugin<any>[]> = Simplify<
+   UnionToIntersection<
+     Flatten<{
+-      [K in T[number]['id']]: ExtractPluginAppContext<T, K>;
++      [K in T[number]["id"]]: ExtractPluginAppContext<T, K>;
+     }>
+   >
+ >;
+ 
+-type ExtractPluginAppContext<T extends RenderPlugin<any>[], K extends T[number]['id']> = ExtractGenericArg1<
+-  Extract<T[number], { id: K }>
+->;
++type ExtractPluginAppContext<
++  T extends RenderPlugin<any>[],
++  K extends T[number]["id"],
++> = ExtractGenericArg1<Extract<T[number], { id: K }>>;
+ 
+ type ExtractGenericArg1<T> = T extends RenderPlugin<infer X> ? X : never;
+diff --git a/src/server/handler.tsx b/src/server/handler.tsx
+index 922d8c32fb8069267d04b7faa078d2e4355feb1b..ea99c23fd484f25f976e1e1f08ace437e23a9be5 100644
+--- a/src/server/handler.tsx
++++ b/src/server/handler.tsx
+@@ -1,6 +1,7 @@
+-import { AsyncLocalStorage } from 'node:async_hooks';
++// @ts-nocheck
++import { AsyncLocalStorage } from "node:async_hooks";
+ 
+-import type { Simplify } from 'type-fest';
++import type { Simplify } from "type-fest";
+ 
+ import type {
+   ClientHandlerFn,
+@@ -10,7 +11,7 @@ import type {
+   ServerHandlerFn,
+   ServerHandlerOpts,
+   ServerHooks,
+-} from '../types.ts';
++} from "../types.ts";
+ 
+ export const storage = new AsyncLocalStorage<{ appCtx: Record<string, any> }>();
+ 
+@@ -30,24 +31,33 @@ export function createApp<P extends RenderPlugin<any>[]>({
+ 
+   const clientHandler = (() => {
+     throw new Error(
+-      'The client handler should not be called on the server. . Something is wrong, make sure you are not calling `appHandler.client()` in code that is included in the server.',
++      "The client handler should not be called on the server. . Something is wrong, make sure you are not calling `appHandler.client()` in code that is included in the server.",
+     );
+   }) as ClientHandlerFn;
+ 
+-  const serverHandler: ServerHandlerFn = async ({ req, meta, renderProps = {} }) => {
++  const serverHandler: ServerHandlerFn = async ({
++    req,
++    meta,
++    renderProps = {},
++  }) => {
+     const appCtx: Record<string, any> = {};
+ 
+     const commonHooks = {
+-      extendCtx: [] as NonNullable<CommonHooks['extendCtx']>[],
+-      renderApp: [] as NonNullable<CommonHooks['renderApp']>[],
+-      wrapApp: [] as NonNullable<CommonHooks['wrapApp']>[],
++      extendCtx: [] as NonNullable<CommonHooks["extendCtx"]>[],
++      renderApp: [] as NonNullable<CommonHooks["renderApp"]>[],
++      wrapApp: [] as NonNullable<CommonHooks["wrapApp"]>[],
+     };
+ 
+     const serverHooks: ServerHooks[] = [];
+ 
+     for (const p of plugins ?? []) {
+       if (p.hooksForReq) {
+-        const hooks = await p?.hooksForReq({ req, meta, renderProps, ctx: appCtx });
++        const hooks = await p?.hooksForReq({
++          req,
++          meta,
++          renderProps,
++          ctx: appCtx,
++        });
+         if (!hooks) continue;
+ 
+         if (hooks.common) {
+@@ -69,11 +79,15 @@ export function createApp<P extends RenderPlugin<any>[]>({
+     }
+ 
+     async function createAppStream() {
+-      let AppComp = appRenderer ? await appRenderer({ req, meta, renderProps }) : undefined;
++      let AppComp = appRenderer
++        ? await appRenderer({ req, meta, renderProps })
++        : undefined;
+ 
+       for (const fn of commonHooks.renderApp ?? []) {
+         if (AppComp) {
+-          throw new Error('Only one plugin can implement app:render. app:wrap might be what you are looking for.');
++          throw new Error(
++            "Only one plugin can implement app:render. app:wrap might be what you are looking for.",
++          );
+         }
+ 
+         AppComp = await fn();
+@@ -81,19 +95,21 @@ export function createApp<P extends RenderPlugin<any>[]>({
+         break;
+       }
+ 
+-      const wrappers: ((props: { children: () => Config['jsxElement'] }) => Config['jsxElement'])[] = [];
++      const wrappers: ((props: {
++        children: () => Config["jsxElement"];
++      }) => Config["jsxElement"])[] = [];
+       for (const fn of commonHooks.wrapApp ?? []) {
+         wrappers.push(fn());
+       }
+ 
+       const renderApp = () => {
+         if (!AppComp) {
+-          throw new Error('No plugin implemented renderApp');
++          throw new Error("No plugin implemented renderApp");
+         }
+ 
+-        let finalApp: Config['jsxElement'];
++        let finalApp: Config["jsxElement"];
+         if (wrappers.length) {
+-          const wrapFn = (w: typeof wrappers): Config['jsxElement'] => {
++          const wrapFn = (w: typeof wrappers): Config["jsxElement"] => {
+             const [child, ...remainingWrappers] = w;
+ 
+             if (!child) return AppComp!();
+@@ -139,18 +155,23 @@ type Flatten<T> = {
+   [K in keyof T]: T[K] extends object ? T[K] : never;
+ }[keyof T];
+ 
+-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
++type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
++  k: infer I,
++) => void
++  ? I
++  : never;
+ 
+ type ExtractPluginsAppContext<T extends RenderPlugin<any>[]> = Simplify<
+   UnionToIntersection<
+     Flatten<{
+-      [K in T[number]['id']]: ExtractPluginAppContext<T, K>;
++      [K in T[number]["id"]]: ExtractPluginAppContext<T, K>;
+     }>
+   >
+ >;
+ 
+-type ExtractPluginAppContext<T extends RenderPlugin<any>[], K extends T[number]['id']> = ExtractGenericArg1<
+-  Extract<T[number], { id: K }>
+->;
++type ExtractPluginAppContext<
++  T extends RenderPlugin<any>[],
++  K extends T[number]["id"],
++> = ExtractGenericArg1<Extract<T[number], { id: K }>>;
+ 
+ type ExtractGenericArg1<T> = T extends RenderPlugin<infer X> ? X : never;

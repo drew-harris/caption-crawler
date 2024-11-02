@@ -1,3 +1,4 @@
+// @ts-ignore
 import type { RenderToStreamFn } from "@ssrx/renderer";
 import { injectIntoStream } from "@ssrx/streaming";
 // @ts-expect-error no types

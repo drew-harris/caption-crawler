@@ -6,7 +6,7 @@ import { appRouter } from "./trpc/app";
 import { handlePage } from "./internal/serverPageHandler";
 import { Queue } from "bullmq";
 import postgres from "postgres";
-import { Hono } from "hono";
+import { Env, Hono } from "hono";
 import { PossibleJob } from "shared/types";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { TB_users } from "db";
@@ -20,7 +20,7 @@ import { eiRoutes } from "~/eisearch";
 import { logger } from "~/logging";
 import Stripe from "stripe";
 
-const server = new Hono();
+const server = new Hono<Env>();
 
 const queryClient = postgres(env.DATABASE_URL);
 const db = drizzle(queryClient);
@@ -72,25 +72,28 @@ server.post("/api/webhook", async (c) => {
   const stripe = new Stripe(env.STRIPE_SECRET_KEY);
   const sig = c.req.header("stripe-signature");
   const body = await c.req.text();
-  
+
   try {
     const event = stripe.webhooks.constructEvent(
       body,
       sig!,
-      env.STRIPE_WEBHOOK_SECRET
+      env.STRIPE_WEBHOOK_SECRET,
     );
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
-      const userId = session.metadata?.userId;
+      if (!session.metadata) {
+        return c.json({ error: "No metadata found" }, 400);
+      }
+      const userId = session.metadata["userId"];
 
       if (userId) {
         logger.info({ userId }, "Upgrading user to pro status");
         await c.var.db
           .update(TB_users)
-          .set({ 
+          .set({
             isPro: true,
-            playlistLimit: 100
+            videoLimit: 10000,
           })
           .where(eq(TB_users.id, userId));
       }

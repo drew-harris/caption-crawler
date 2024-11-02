@@ -4,6 +4,14 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@ssrx/renderer':
+    hash: nbf7q72ob5icxz5rexpfjqpyn4
+    path: patches/@ssrx__renderer.patch
+  '@ssrx/vite':
+    hash: zygoojggqwqisyvqfl7wtjv5qi
+    path: patches/@ssrx__vite.patch
+
 importers:
 
   .:
@@ -78,13 +86,13 @@ importers:
         version: 0.4.1(hono@4.4.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@ssrx/renderer':
         specifier: latest
-        version: 0.5.1(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+        version: 0.5.1(patch_hash=nbf7q72ob5icxz5rexpfjqpyn4)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@ssrx/streaming':
         specifier: latest
         version: 0.3.1
       '@ssrx/vite':
         specifier: latest
-        version: 0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+        version: 0.7.2(patch_hash=zygoojggqwqisyvqfl7wtjv5qi)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@t3-oss/env-core':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.6.3)(zod@3.23.8)
@@ -6319,7 +6327,7 @@ snapshots:
 
   '@ssrx/plugin-tanstack-router@0.4.2(@tanstack/react-router@1.38.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(hono@4.4.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
     dependencies:
-      '@ssrx/renderer': 0.5.1(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      '@ssrx/renderer': 0.5.1(patch_hash=nbf7q72ob5icxz5rexpfjqpyn4)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@tanstack/react-cross-context': 1.57.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-router': 1.38.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       jsesc: 3.0.2
@@ -6334,9 +6342,9 @@ snapshots:
 
   '@ssrx/react@0.4.1(hono@4.4.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
     dependencies:
-      '@ssrx/renderer': 0.5.1(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      '@ssrx/renderer': 0.5.1(patch_hash=nbf7q72ob5icxz5rexpfjqpyn4)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       '@ssrx/streaming': 0.3.1
-      '@ssrx/vite': 0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      '@ssrx/vite': 0.7.2(patch_hash=zygoojggqwqisyvqfl7wtjv5qi)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       isbot-fast: 1.2.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -6346,10 +6354,10 @@ snapshots:
       - supports-color
       - vite
 
-  '@ssrx/renderer@0.5.1(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
+  '@ssrx/renderer@0.5.1(patch_hash=nbf7q72ob5icxz5rexpfjqpyn4)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
     dependencies:
       '@ssrx/streaming': 0.3.1
-      '@ssrx/vite': 0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
+      '@ssrx/vite': 0.7.2(patch_hash=zygoojggqwqisyvqfl7wtjv5qi)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
       deepmerge: 4.3.1
       vite-env-only: 3.0.3(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))
     transitivePeerDependencies:
@@ -6359,7 +6367,7 @@ snapshots:
 
   '@ssrx/streaming@0.3.1': {}
 
-  '@ssrx/vite@0.7.2(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
+  '@ssrx/vite@0.7.2(patch_hash=zygoojggqwqisyvqfl7wtjv5qi)(hono@4.4.6)(vite@5.3.1(@types/node@20.14.5)(terser@5.31.0))':
     dependencies:
       '@hono/node-server': 1.13.4(hono@4.4.6)
       radix3: 1.1.2
@@ -8503,7 +8511,7 @@ snapshots:
       consola: 3.2.3
       execa: 8.0.1
       pathe: 1.1.2
-      ufo: 1.5.3
+      ufo: 1.5.4
 
   object-assign@4.1.1: {}
 

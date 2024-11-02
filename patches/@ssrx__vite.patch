@@ -1,0 +1,261 @@
+diff --git a/src/runtime/assets.server.ts b/src/runtime/assets.server.ts
+index da6cd0f44fb34a0139e30796d3643d5d91329dce..2674c2a0babc06ba6e4526b3c0c0692d79104f30 100644
+--- a/src/runtime/assets.server.ts
++++ b/src/runtime/assets.server.ts
+@@ -1,16 +1,19 @@
+-import type { RadixRouter } from 'radix3';
+-import { createRouter } from 'radix3';
+-import ssrManifest from 'virtual:ssrx-manifest';
++// @ts-nocheck
++import type { RadixRouter } from "radix3";
++import { createRouter } from "radix3";
++import ssrManifest from "virtual:ssrx-manifest";
+ 
+-import { mergeScriptTags } from '../helpers/html.ts';
+-import type { AssetHtmlTag, SSRRouteManifest } from '../helpers/routes.ts';
+-import { assetsToTags } from '../helpers/routes.ts';
+-import type { Manifest } from '../ssr-manifest.ts';
++import { mergeScriptTags } from "../helpers/html.ts";
++import type { AssetHtmlTag, SSRRouteManifest } from "../helpers/routes.ts";
++import { assetsToTags } from "../helpers/routes.ts";
++import type { Manifest } from "../ssr-manifest.ts";
+ 
+ export type { AssetHtmlTag };
+ 
+ export const assetsForRequest = async (url: string) => {
+-  return import.meta.env.PROD ? prodAssetsForRequest(url) : devAssetsForRequest(url);
++  return import.meta.env.PROD
++    ? prodAssetsForRequest(url)
++    : devAssetsForRequest(url);
+ };
+ 
+ const devAssetsForRequest = async (url: string) => {
+@@ -24,11 +27,13 @@ const devAssetsForRequest = async (url: string) => {
+   tags.push(...pluginTags);
+ 
+   const assets = await m.getAssets(url);
+-  tags.push(...assetsToTags(assets, { isDev: true, shouldModulePreload: true }));
++  tags.push(
++    ...assetsToTags(assets, { isDev: true, shouldModulePreload: true }),
++  );
+ 
+-  const finalTags = tags.filter(t => t.tag !== 'script');
++  const finalTags = tags.filter((t) => t.tag !== "script");
+ 
+-  const scriptTags = tags.filter(t => t.tag === 'script');
++  const scriptTags = tags.filter((t) => t.tag === "script");
+   const mergedScriptTag = mergeScriptTags(scriptTags);
+   if (mergedScriptTag) {
+     finalTags.push(mergedScriptTag);
+@@ -45,7 +50,10 @@ const prodAssetsForRequest = (url: string) => {
+   const entryAssets = ssrManifest.entry;
+   const reqAssets = router.lookup(u.pathname) ?? { assets: [] };
+ 
+-  const finalTags = assetsToTags([...entryAssets, ...reqAssets.assets], { isDev: false, shouldModulePreload: true });
++  const finalTags = assetsToTags([...entryAssets, ...reqAssets.assets], {
++    isDev: false,
++    shouldModulePreload: true,
++  });
+ 
+   return groupAssets(finalTags);
+ };
+@@ -55,11 +63,12 @@ type ExtractRecordValues<T extends Record<string, any>> = T[keyof T];
+ let routerSingleton: RadixRouter<ExtractRecordValues<SSRRouteManifest>>;
+ 
+ const createManifestRouter = () => {
+-  routerSingleton = routerSingleton || createRouter({ routes: ssrManifest.routes });
++  routerSingleton =
++    routerSingleton || createRouter({ routes: ssrManifest.routes });
+   return routerSingleton;
+ };
+ 
+ const groupAssets = (assets: AssetHtmlTag[]) => ({
+-  headAssets: assets.filter(a => a.injectTo !== 'body'),
+-  bodyAssets: assets.filter(a => a.injectTo === 'body'),
++  headAssets: assets.filter((a) => a.injectTo !== "body"),
++  bodyAssets: assets.filter((a) => a.injectTo === "body"),
+ });
+diff --git a/src/ssr-manifest.ts b/src/ssr-manifest.ts
+index 6299602fc5bfc635bf59e5794f7d30912ea67cf4..bd527dc5d605d6b546663ecf9a2056698e3d3385 100644
+--- a/src/ssr-manifest.ts
++++ b/src/ssr-manifest.ts
+@@ -1,9 +1,14 @@
+-import * as fs from 'fs';
+-import * as path from 'path';
+-import type { IndexHtmlTransformHook, ViteDevServer } from 'vite';
+-
+-import type { Config } from './config.ts';
+-import type { Asset, SSRManifest, ViteClientManifest } from './helpers/routes.ts';
++// @ts-nocheck
++import * as fs from "fs";
++import * as path from "path";
++import type { IndexHtmlTransformHook, ViteDevServer } from "vite";
++
++import type { Config } from "./config.ts";
++import type {
++  Asset,
++  SSRManifest,
++  ViteClientManifest,
++} from "./helpers/routes.ts";
+ import {
+   assetsToHtml,
+   assetsToTags,
+@@ -14,9 +19,9 @@ import {
+   getAssetWeight,
+   getClientManifestSources,
+   getRoutesIds,
+-} from './helpers/routes.ts';
+-import { findStylesInModuleGraph } from './helpers/vite.ts';
+-import type { MatchedRoute, Router } from './router.ts';
++} from "./helpers/routes.ts";
++import { findStylesInModuleGraph } from "./helpers/vite.ts";
++import type { MatchedRoute, Router } from "./router.ts";
+ 
+ type ManifestOpts<ExternalRoutes> = {
+   router: Router<ExternalRoutes>;
+@@ -30,10 +35,10 @@ export class Manifest<ExternalRoutes> {
+   private viteServer?: ViteDevServer;
+ 
+   #clientManifest?: ViteClientManifest;
+-  readonly clientManifestName = 'manifest.json';
++  readonly clientManifestName = "manifest.json";
+ 
+   #ssrManifest?: SSRManifest;
+-  readonly ssrManifestName = 'ssr-manifest.json';
++  readonly ssrManifestName = "ssr-manifest.json";
+ 
+   // id (asset path) => strified css module
+   readonly cssModules: Record<string, string> = {};
+@@ -77,17 +82,21 @@ export class Manifest<ExternalRoutes> {
+       return this.#getAssetsDev([]);
+     }
+ 
+-    throw new Error('not implemented');
++    throw new Error("not implemented");
+   }
+ 
+   get ssrManifest(): SSRManifest {
+     return this.#ssrManifest ?? { ...emptySSRManifest };
+   }
+ 
+-  public async buildSSRManifest({ writeToDisk }: { writeToDisk?: boolean } = {}): Promise<SSRManifest> {
++  public async buildSSRManifest({
++    writeToDisk,
++  }: { writeToDisk?: boolean } = {}): Promise<SSRManifest> {
+     const viteServer = this.viteServer;
+     if (!viteServer) {
+-      throw new Error('Cannot call buildRoutesManifest() without a vite server');
++      throw new Error(
++        "Cannot call buildRoutesManifest() without a vite server",
++      );
+     }
+ 
+     const clientManifest = this.#loadClientManifest();
+@@ -100,7 +109,11 @@ export class Manifest<ExternalRoutes> {
+     const ssrManifest = generateSSRManifest(clientManifest, routeIds);
+ 
+     if (writeToDisk) {
+-      fs.writeFileSync(this.#ssrManifestPath, JSON.stringify(ssrManifest, null, 2), 'utf-8');
++      fs.writeFileSync(
++        this.#ssrManifestPath,
++        JSON.stringify(ssrManifest, null, 2),
++        "utf-8",
++      );
+     }
+ 
+     this.#ssrManifest = ssrManifest;
+@@ -108,30 +121,38 @@ export class Manifest<ExternalRoutes> {
+     return ssrManifest;
+   }
+ 
+-  public async getVitePluginAssets(requestUrl = '/') {
++  public async getVitePluginAssets(requestUrl = "/") {
+     const server = this.viteServer;
+     if (!server) return [];
+ 
+-    const plugins = server.config.plugins.filter(plugin => 'transformIndexHtml' in plugin);
++    const plugins = server.config.plugins.filter(
++      (plugin) => "transformIndexHtml" in plugin,
++    );
+ 
+     const pluginAssets = [];
+     for (const plugin of plugins) {
+       const hook = plugin.transformIndexHtml;
+ 
+       const handler: IndexHtmlTransformHook =
+-        typeof hook === 'function'
++        typeof hook === "function"
+           ? hook
+           : // @ts-expect-error ignore
+             hook.handler ?? hook.transform;
+ 
+-      const transformedHtml = await handler(``, { path: requestUrl, server, filename: 'index.html' });
++      const transformedHtml = await handler(``, {
++        path: requestUrl,
++        server,
++        filename: "index.html",
++      });
+ 
+       if (!transformedHtml) continue;
+ 
+       if (Array.isArray(transformedHtml)) {
+         pluginAssets.push(...transformedHtml);
+-      } else if (typeof transformedHtml === 'string') {
+-        console.warn(`getVitePluginAssets() transformHtml string response not supported from plugin ${plugin.name}`);
++      } else if (typeof transformedHtml === "string") {
++        console.warn(
++          `getVitePluginAssets() transformHtml string response not supported from plugin ${plugin.name}`,
++        );
+         continue;
+       } else if (transformedHtml.tags) {
+         pluginAssets.push(...(transformedHtml.tags ?? []));
+@@ -140,7 +161,7 @@ export class Manifest<ExternalRoutes> {
+ 
+     return pluginAssets.map((asset, index) => {
+       return {
+-        injectTo: asset.tag === 'script' ? 'body' : undefined,
++        injectTo: asset.tag === "script" ? "body" : undefined,
+         ...asset,
+         attrs: {
+           ...asset.attrs,
+@@ -167,13 +188,18 @@ export class Manifest<ExternalRoutes> {
+       );
+     }
+ 
+-    this.#clientManifest = JSON.parse(fs.readFileSync(this.clientManifestPath, 'utf-8')) as ViteClientManifest;
++    this.#clientManifest = JSON.parse(
++      fs.readFileSync(this.clientManifestPath, "utf-8"),
++    ) as ViteClientManifest;
+ 
+     return this.#clientManifest;
+   }
+ 
+   get #ssrManifestPath(): string {
+-    return path.resolve(this.config.root, `${this.config.serverOutDir}/${this.ssrManifestName}`);
++    return path.resolve(
++      this.config.root,
++      `${this.config.serverOutDir}/${this.ssrManifestName}`,
++    );
+   }
+ 
+   /**
+@@ -183,7 +209,7 @@ export class Manifest<ExternalRoutes> {
+   async #getAssetsDev(routeMatches: MatchedRoute[]): Promise<Asset[]> {
+     const devServer = this.viteServer;
+     if (!devServer) {
+-      throw new Error('Cannot call getAssetsDev() without a vite server');
++      throw new Error("Cannot call getAssetsDev() without a vite server");
+     }
+ 
+     const assets: Asset[] = [];
+@@ -191,8 +217,8 @@ export class Manifest<ExternalRoutes> {
+     // push the vite dev entry
+     assets.push({
+       type: AssetType.script,
+-      url: buildAssetUrl('/@vite/client', this.config.basePath),
+-      weight: getAssetWeight('script.js'),
++      url: buildAssetUrl("/@vite/client", this.config.basePath),
++      weight: getAssetWeight("script.js"),
+     });
+ 
+     // push the main entry

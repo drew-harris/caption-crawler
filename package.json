@@ -19,5 +19,11 @@
     "turbo": "^2.2.3",
     "turborepo": "^0.0.1"
   },
-  "packageManager": "pnpm@9.1.0"
+  "packageManager": "pnpm@9.1.0",
+  "pnpm": {
+    "patchedDependencies": {
+      "@ssrx/renderer": "patches/@ssrx__renderer.patch",
+      "@ssrx/vite": "patches/@ssrx__vite.patch"
+    }
+  }
 }

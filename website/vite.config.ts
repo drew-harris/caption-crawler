@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { tanstackRouterAdapter } from "@ssrx/plugin-tanstack-router/adapter";
 import { ssrx } from "@ssrx/vite/plugin";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";

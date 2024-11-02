@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { renderAssets } from "@ssrx/react";
 import { assetsForRequest } from "@ssrx/vite/runtime";
 import { QueryClient, dehydrate } from "@tanstack/react-query";

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Context } from "hono";
 import * as entry from "./entry.server";
 import { stream } from "hono/streaming";

@@ -1,10 +1,10 @@
 import { TB_collections } from "db";
 import { eq } from "drizzle-orm";
-import { Hono } from "hono";
+import { Env, Hono } from "hono";
 import { TypesenseMoment } from "shared/types";
 import { SearchResponse } from "typesense/lib/Typesense/Documents";
 
-const eiRoutes = new Hono();
+const eiRoutes = new Hono<Env>();
 
 eiRoutes.post("/search", async (c) => {
   const body = await c.req.json();
