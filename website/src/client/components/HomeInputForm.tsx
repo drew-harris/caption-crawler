@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { FormEvent, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useDebounce } from "~/hooks/useDebounce";
 import { trpc } from "~/internal/trpc";
 
@@ -107,6 +108,11 @@ export function HomeInputForm() {
           placeholder="Enter a YouTube playlist URL or search for playlists..."
           className="flex-1 overflow-hidden focus:outline-none group w-full p-[10px] text-[14px] rounded-l-[4px]"
         />
+        {isSearching && searchMutation.isLoading && (
+          <div className="absolute right-24 top-1/2 -translate-y-1/2">
+            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+          </div>
+        )}
 
         {isSearching && searchMutation.data && (
           <div className="absolute left-0 right-0 top-full bg-white shadow-lg rounded-b-lg mt-1 border border-gray-200 max-h-[300px] overflow-y-auto z-10">
