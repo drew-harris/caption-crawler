@@ -26,36 +26,37 @@ function SettingsPage() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">Settings</h1>
+    <div className="max-w-2xl mx-auto mt-8 px-4">
+      <h1 className="text-2xl font-bold mb-6">Settings</h1>
 
-      <div className="grid gap-6">
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Usage</h2>
-          <div className="mb-6">
-            <p className="text-gray-700">
-              Videos: {user.videoCount} / {user.videoLimit}
-            </p>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-              <div 
-                className="bg-blue-600 h-2.5 rounded-full" 
-                style={{ 
-                  width: `${Math.min((user.videoCount / user.videoLimit) * 100, 100)}%`
-                }}
-              ></div>
-            </div>
-          </div>
-          <h2 className="text-xl font-bold mb-4">Billing</h2>
-          <p className="text-gray-500 mb-4">
-            You can purchase a subscription to increase your video limit.
+      <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6 mb-4">
+        <h2 className="text-lg font-semibold mb-4">Usage</h2>
+        <div className="mb-6">
+          <p className="text-[14px] text-gray-700">
+            Videos: {user.videoCount} / {user.videoLimit}
           </p>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handlePurchase}
-          >
-            Purchase
-          </button>
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div 
+              className="bg-strong-blue h-2 rounded-full" 
+              style={{ 
+                width: `${Math.min((user.videoCount / user.videoLimit) * 100, 100)}%`
+              }}
+            ></div>
+          </div>
         </div>
+      </div>
+
+      <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6">
+        <h2 className="text-lg font-semibold mb-4">Billing</h2>
+        <p className="text-[14px] text-gray-600 mb-4">
+          You can purchase a subscription to increase your video limit.
+        </p>
+        <button
+          className="bg-strong-blue hover:bg-strong-blue/95 text-white px-[31.5px] py-[10px] rounded-[4px]"
+          onClick={handlePurchase}
+        >
+          Purchase
+        </button>
       </div>
     </div>
   );
