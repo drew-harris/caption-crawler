@@ -96,7 +96,7 @@ export function HomeInputForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mt-8 px-4">
-      <div className="relative flex bg-white border border-tan-200 rounded-[4px] shadow-sm">
+      <div className="relative flex flex-col sm:flex-row bg-white border border-tan-200 rounded-[4px] shadow-sm">
         <input
           value={input}
           onChange={(e) => {
@@ -106,7 +106,7 @@ export function HomeInputForm() {
             );
           }}
           placeholder="Enter a YouTube playlist URL or search for playlists..."
-          className="flex-1 overflow-hidden focus:outline-none group w-full p-[10px] pr-12 text-[14px] rounded-l-[4px]"
+          className="flex-1 overflow-hidden focus:outline-none group w-full p-[10px] pr-12 text-[14px] rounded-t-[4px] sm:rounded-l-[4px] sm:rounded-tr-none"
         />
         {isSearching && searchMutation.isLoading && (
           <div className="absolute right-[100px] top-1/2 -translate-y-1/2 pointer-events-none">
@@ -146,7 +146,7 @@ export function HomeInputForm() {
 
         <button
           type="submit"
-          className="bg-strong-blue hover:bg-strong-blue/95 px-[31.5px] text-white rounded-tr-[4px] rounded-br-[4px]"
+          className="bg-strong-blue hover:bg-strong-blue/95 px-[31.5px] py-2 sm:py-0 text-white rounded-b-[4px] sm:rounded-l-none sm:rounded-r-[4px]"
         >
           Scan
         </button>
