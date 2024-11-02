@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useMatch } from "@tanstack/react-router";
 import { useContext } from "react";
 import { UserContext } from "~/client/context/UserContext";
 import { trpc } from "~/internal/trpc";
@@ -13,9 +13,17 @@ export const Navbar = () => {
         Caption Crawler
       </Link>
       {user && collections && collections.length > 0 && (
-        <Link to="/playlists" className="text-navy md:text-lg">
-          My Playlists
-        </Link>
+        <>
+          {useMatch({ to: '/playlists' }) ? (
+            <Link to="/settings" className="text-navy md:text-lg">
+              Settings
+            </Link>
+          ) : (
+            <Link to="/playlists" className="text-navy md:text-lg">
+              My Playlists
+            </Link>
+          )}
+        </>
       )}
     </div>
   );
