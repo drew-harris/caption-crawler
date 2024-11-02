@@ -1,4 +1,9 @@
-import { Link, useMatch } from "@tanstack/react-router";
+import {
+  Link,
+  useMatch,
+  useRouter,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useContext } from "react";
 import { UserContext } from "~/client/context/UserContext";
 import { trpc } from "~/internal/trpc";
@@ -6,6 +11,7 @@ import { trpc } from "~/internal/trpc";
 export const Navbar = () => {
   const { data: collections } = trpc.collections.getAllCollections.useQuery();
   const user = useContext(UserContext);
+  const route = useRouter();
 
   return (
     <div className="flex justify-between gap-6">
@@ -14,7 +20,7 @@ export const Navbar = () => {
       </Link>
       {user && collections && collections.length > 0 && (
         <>
-          {useMatch({ to: '/playlists' }) ? (
+          {route.state.location.pathname === "/playlists" ? (
             <Link to="/settings" className="text-navy md:text-lg">
               Settings
             </Link>
