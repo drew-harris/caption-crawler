@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { autoUserProcedure, router } from "./base";
 import Stripe from "stripe";
 import { env } from "../env";
@@ -14,10 +13,10 @@ export const stripeRouter = router({
           quantity: 1,
         },
       ],
-      mode: 'subscription',
+      mode: "payment",
       success_url: `${env.PUBLIC_URL}/settings?success=true`,
       cancel_url: `${env.PUBLIC_URL}?canceled=true`,
-      customer_email: ctx.user.email,
+      return_url: `${env.PUBLIC_URL}/settings?success=true`,
       metadata: {
         userId: ctx.user.id,
       },

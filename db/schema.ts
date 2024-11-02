@@ -5,7 +5,6 @@ import {
   timestamp,
   boolean,
   integer,
-  uniqueIndex,
   unique,
 } from "drizzle-orm/pg-core";
 
@@ -15,6 +14,8 @@ export const TB_users = pgTable("user", {
   isPro: boolean("is_pro").default(false).notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull(),
   isAdmin: boolean("is_admin").default(false).notNull(),
+  videoCount: integer("video_count").notNull().default(0),
+  videoLimit: integer("video_limit").notNull().default(0),
 });
 
 export const TB_sessions = pgTable("session", {

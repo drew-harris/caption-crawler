@@ -4,8 +4,8 @@ import { UserContext } from "~/client/context/UserContext";
 import { trpc } from "~/internal/trpc";
 
 export const Navbar = () => {
-  const user = useContext(UserContext);
   const { data: collections } = trpc.collections.getAllCollections.useQuery();
+  const user = useContext(UserContext);
 
   return (
     <div className="flex justify-between gap-6">

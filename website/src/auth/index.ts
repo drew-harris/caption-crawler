@@ -13,8 +13,8 @@ export const createAuth = (db: PostgresJsDatabase) => {
         isPro: databaseUserAttributes.isPro,
         createdAt: new Date(databaseUserAttributes.createdAt),
         isAdmin: databaseUserAttributes.isAdmin,
-        playlistCount: databaseUserAttributes.playlistCount,
-        playlistLimit: databaseUserAttributes.playlistLimit,
+        videoCount: databaseUserAttributes.videoCount,
+        videoLimit: databaseUserAttributes.videoLimit,
       };
     },
   });
@@ -33,6 +33,6 @@ interface DatabaseUserAttributes {
   createdAt: Date;
   isPro: boolean;
   isAdmin: boolean;
-  playlistCount: number;
-  playlistLimit: number;
+  videoCount: number;
+  videoLimit: number;
 }

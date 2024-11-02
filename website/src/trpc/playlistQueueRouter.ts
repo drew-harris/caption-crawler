@@ -33,7 +33,8 @@ export const playlistQueueRouter = router({
       if (ctx.user.playlistCount >= ctx.user.playlistLimit) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You have reached your playlist limit. Please upgrade to add more playlists.",
+          message:
+            "You have reached your playlist limit. Please upgrade to add more playlists.",
         });
       }
 

@@ -181,6 +181,9 @@ importers:
       shared:
         specifier: workspace:*
         version: link:../shared
+      stripe:
+        specifier: ^17.3.1
+        version: 17.3.1
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.5.2
@@ -4483,6 +4486,10 @@ packages:
 
   strip-literal@2.1.0:
     resolution: {integrity: sha512-Op+UycaUt/8FbN/Z2TWPBLge3jWrP3xj10f3fnYxf052bKuS3EKs1ZQcVGjnEMdsNVAM+plXRdmjrZ/KgG3Skw==}
+
+  stripe@17.3.1:
+    resolution: {integrity: sha512-E9/u+GFBPkYnTmfFCoKX3+gP4R3SkZoGunHe4cw9J+sqkj5uxpLFf1LscuI9BuEyIQ0PFAgPTHavgQwRtOvnag==}
+    engines: {node: '>=12.*'}
 
   sucrase@3.35.0:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
@@ -9149,6 +9156,11 @@ snapshots:
   strip-literal@2.1.0:
     dependencies:
       js-tokens: 9.0.0
+
+  stripe@17.3.1:
+    dependencies:
+      '@types/node': 20.14.5
+      qs: 6.12.1
 
   sucrase@3.35.0:
     dependencies:

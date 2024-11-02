@@ -11,9 +11,9 @@ type User = {
   isPro: boolean;
   isAdmin: boolean;
   createdAt: Date;
-  playlistCount: number;
-  playlistLimit: number;
-  email: string;
+  videoCount: number;
+  videoLimit: number;
+  email?: string;
 };
 
 declare module "hono" {
