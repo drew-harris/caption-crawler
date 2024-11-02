@@ -16,10 +16,9 @@ export const stripeRouter = router({
       mode: "payment",
       success_url: `${env.PUBLIC_URL}/settings?success=true`,
       cancel_url: `${env.PUBLIC_URL}?canceled=true`,
-      return_url: `${env.PUBLIC_URL}/settings?success=true`,
-      // metadata: {
-      //   userId: ctx.user.id,
-      // },
+      metadata: {
+        userId: ctx.user.id,
+      },
     });
 
     return { url: session.url };
