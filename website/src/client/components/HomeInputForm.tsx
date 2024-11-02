@@ -110,7 +110,7 @@ export function HomeInputForm() {
         />
         {isSearching && searchMutation.isLoading && (
           <div className="absolute right-24 top-1/2 -translate-y-1/2">
-            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+            <Loader2 className="w-4 h-4 animate-spin text-gray-800" />
           </div>
         )}
 
