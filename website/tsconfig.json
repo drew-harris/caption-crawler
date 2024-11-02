@@ -4,7 +4,12 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "node_modules/**/*",
+    "**/node_modules/*",
+    "../node_modules/*",
+    "**/node_modules/@ssrx/renderer/**",
+    "./vite.config.ts"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
@@ -12,7 +17,9 @@
       "~/*": [
         "./src/*"
       ],
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     "rootDir": ".",
     "sourceMap": true,

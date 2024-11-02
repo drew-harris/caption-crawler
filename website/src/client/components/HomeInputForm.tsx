@@ -3,14 +3,15 @@ import { FormEvent, useState } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
 import { trpc } from "~/internal/trpc";
 
-const stripeCheckoutMutation = trpc.stripe.createCheckoutSession.useMutation();
-
 export function HomeInputForm() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const debouncedInput = useDebounce(input, 300);
   const navigate = useNavigate();
+
+  const stripeCheckoutMutation =
+    trpc.stripe.createCheckoutSession.useMutation();
 
   const searchMutation = trpc.youtube.searchPlaylists.useQuery(
     { query: debouncedInput },
@@ -62,7 +63,11 @@ export function HomeInputForm() {
     },
     onError(error, variables, context) {
       if (error.message.includes("playlist limit")) {
-        if (confirm("You've reached your playlist limit. Would you like to upgrade to add more playlists?")) {
+        if (
+          confirm(
+            "You've reached your playlist limit. Would you like to upgrade to add more playlists?",
+          )
+        ) {
           stripeCheckoutMutation.mutate(undefined, {
             onSuccess: ({ url }) => {
               if (url) window.location.href = url;
