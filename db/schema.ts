@@ -10,12 +10,12 @@ import {
 
 export const TB_users = pgTable("user", {
   id: text("id").primaryKey(),
-  isGoogle: boolean("is_google").default(false).notNull(),
+  googleId: text("google_id").unique(),
   isPro: boolean("is_pro").default(false).notNull(),
   createdAt: timestamp("created_at", { mode: "date" }).notNull(),
   isAdmin: boolean("is_admin").default(false).notNull(),
   videoCount: integer("video_count").notNull().default(0),
-  videoLimit: integer("video_limit").notNull().default(0),
+  videoLimit: integer("video_limit").notNull().default(100),
 });
 
 export const TB_sessions = pgTable("session", {

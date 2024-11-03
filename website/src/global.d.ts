@@ -7,7 +7,7 @@ import { Redis } from "ioredis";
 
 type User = {
   id: string;
-  isGoogle: boolean;
+  googleId: string | null;
   isPro: boolean;
   isAdmin: boolean;
   createdAt: Date;

@@ -9,7 +9,7 @@ export const createAuth = (db: PostgresJsDatabase) => {
     sessionExpiresIn: new TimeSpan(9, "w"),
     getUserAttributes(databaseUserAttributes) {
       return {
-        isGoogle: databaseUserAttributes.isGoogle,
+        googleId: databaseUserAttributes.googleId,
         isPro: databaseUserAttributes.isPro,
         createdAt: new Date(databaseUserAttributes.createdAt),
         isAdmin: databaseUserAttributes.isAdmin,
@@ -29,7 +29,7 @@ declare module "lucia" {
 }
 
 interface DatabaseUserAttributes {
-  isGoogle: boolean;
+  googleId: string | null;
   createdAt: Date;
   isPro: boolean;
   isAdmin: boolean;

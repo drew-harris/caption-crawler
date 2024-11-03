@@ -29,9 +29,9 @@ function Account() {
   return (
     <div className="max-w-2xl mx-auto mt-8 px-4">
       <h1 className="text-2xl font-bold mb-6">Account</h1>
-      {!user.isGoogle && <GoogleLoginPromptCard />}
+      {!user.googleId && <GoogleLoginPromptCard />}
 
-      <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6 mb-4">
+      <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6 my-4">
         <h2 className="text-lg font-semibold mb-4">Usage</h2>
         <div className="mb-6">
           <p className="text-[14px] text-gray-700">

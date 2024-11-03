@@ -44,7 +44,7 @@ export const adminProcedure = t.procedure.use(async ({ next, ctx }) => {
 });
 
 export const googleProcedure = t.procedure.use(async ({ next, ctx }) => {
-  if (!ctx.user?.isGoogle) {
+  if (!ctx.user?.googleId) {
     throw new Error("Not a google user");
   }
 
