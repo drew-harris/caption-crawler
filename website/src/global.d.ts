@@ -25,6 +25,7 @@ declare module "hono" {
       queue: Queue<PossibleJob>;
       typesense: TSClient;
       redis: Redis;
+      stripe: Stripe;
     };
   }
 }

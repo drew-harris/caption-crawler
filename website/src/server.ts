@@ -16,7 +16,7 @@ import { env } from "./env";
 import { authMiddleware } from "./auth/middleware";
 import { Client as TSClient } from "typesense";
 import { TRPCContext } from "./trpc/base";
-import { eiRoutes } from "~/eisearch";
+import { eiRoutes } from "~/subrouters/eisearch";
 import { logger } from "~/logging";
 import Stripe from "stripe";
 
@@ -51,6 +51,7 @@ const redis = new Redis({
   port: 6379,
   keyPrefix: "cc-data",
 });
+const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 server.use("/assets/*", serveStatic({ root: "./dist/public" }));
 server.use("/favicon.ico", serveStatic({ path: "./dist/public/favicon.ico" }));
@@ -61,6 +62,7 @@ server.use("*", async (c, next) => {
   c.set("queue", ingestQueue);
   c.set("typesense", typesense);
   c.set("redis", redis);
+  c.set("stripe", stripe);
   await next();
 });
 
@@ -68,13 +70,12 @@ server.use("*", authMiddleware);
 
 server.route("/ei", eiRoutes);
 
-server.post("/api/webhook", async (c) => {
-  const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+server.post("/callback/stripe", async (c) => {
   const sig = c.req.header("stripe-signature");
   const body = await c.req.text();
 
   try {
-    const event = stripe.webhooks.constructEvent(
+    const event = c.var.stripe.webhooks.constructEvent(
       body,
       sig!,
       env.STRIPE_WEBHOOK_SECRET,
@@ -93,6 +94,7 @@ server.post("/api/webhook", async (c) => {
           .update(TB_users)
           .set({
             isPro: true,
+            // TODO: change to add more videos
             videoLimit: 10000,
           })
           .where(eq(TB_users.id, userId));
@@ -119,6 +121,7 @@ server.use(
         baseRequest: c,
         typesense,
         redis,
+        stripe,
       } satisfies TRPCContext;
     },
     onError({ error }) {

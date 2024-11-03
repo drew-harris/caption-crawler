@@ -1,7 +1,9 @@
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
+import { Google } from "arctic";
 import { Lucia, TimeSpan } from "lucia";
 import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { TB_sessions, TB_users } from "db";
+import { env } from "~/env";
 
 export const createAuth = (db: PostgresJsDatabase) => {
   const adapter = new DrizzlePostgreSQLAdapter(db, TB_sessions, TB_users);
@@ -36,3 +38,9 @@ interface DatabaseUserAttributes {
   videoCount: number;
   videoLimit: number;
 }
+
+const google = new Google(
+  env.GOOGLE_CLIENT_ID,
+  env.GOOGLE_CLIENT_SECRET,
+  `${env.PUBLIC_URL}/callback/google`,
+);
