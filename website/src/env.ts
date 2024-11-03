@@ -15,6 +15,8 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: z.string(),
     STRIPE_PRICE_ID: z.string(),
     PUBLIC_URL: z.string().url(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
   },
 
   runtimeEnv: process.env,

@@ -42,3 +42,11 @@ export const adminProcedure = t.procedure.use(async ({ next, ctx }) => {
 
   return await next();
 });
+
+export const googleProcedure = t.procedure.use(async ({ next, ctx }) => {
+  if (!ctx.user?.isGoogle) {
+    throw new Error("Not a google user");
+  }
+
+  return await next();
+});

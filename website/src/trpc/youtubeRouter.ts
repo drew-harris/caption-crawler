@@ -3,6 +3,7 @@ import { youtube_v3 } from "@googleapis/youtube";
 import { z } from "zod";
 import { env } from "~/env";
 import { autoUserProcedure, router } from "~/trpc/base";
+import { logger } from "~/logging";
 
 export const youtubeRouter = router({
   searchPlaylists: autoUserProcedure
@@ -34,12 +35,15 @@ export const youtubeRouter = router({
       );
 
       if (!response.ok) {
-        console.error(await response.text());
+        logger.error(await response.text());
         throw new Error("Failed to fetch search results");
       }
 
       const data =
         (await response.json()) as youtube_v3.Schema$SearchListResponse;
+
+      logger.info(data);
+
       if (!data.items) {
         throw new Error("No items found in search response");
       }

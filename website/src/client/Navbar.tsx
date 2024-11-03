@@ -1,9 +1,4 @@
-import {
-  Link,
-  useMatch,
-  useRouter,
-  useRouterState,
-} from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { useContext } from "react";
 import { UserContext } from "~/client/context/UserContext";
 import { trpc } from "~/internal/trpc";
@@ -21,8 +16,8 @@ export const Navbar = () => {
       {user && collections && collections.length > 0 && (
         <>
           {route.state.location.pathname === "/playlists" ? (
-            <Link to="/settings" className="text-navy md:text-lg">
-              Settings
+            <Link to="/account" className="text-navy md:text-lg">
+              Account
             </Link>
           ) : (
             <Link to="/playlists" className="text-navy md:text-lg">
