@@ -39,7 +39,7 @@ interface DatabaseUserAttributes {
   videoLimit: number;
 }
 
-const google = new Google(
+export const google = new Google(
   env.GOOGLE_CLIENT_ID,
   env.GOOGLE_CLIENT_SECRET,
   `${env.PUBLIC_URL}/callback/google`,

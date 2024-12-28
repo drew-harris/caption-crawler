@@ -12,16 +12,13 @@ export const GoogleLoginPromptCard = () => {
         Google account. Stay logged in across all your devices!
       </p>
 
-      <button
+      <a
         className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-        onClick={() => {
-          // TODO: Implement Google sign in
-          console.log("Sign in with Google clicked");
-        }}
+        href="/auth/login/google"
       >
         <img src="/google.svg" alt="" className="w-5 h-5 mr-2" />
         Sign in with Google
-      </button>
+      </a>
     </div>
   );
 };

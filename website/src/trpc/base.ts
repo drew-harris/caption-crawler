@@ -1,7 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import { Context, Env } from "hono";
 import { User } from "lucia";
-import { createUserWithCookie } from "../auth/middleware";
+import { createUserWithCookie } from "../auth/routing";
 /**
  * Initialization of tRPC backend
  * Should be done only once per backend!

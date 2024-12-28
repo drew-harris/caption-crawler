@@ -13,7 +13,7 @@ import { TB_users } from "db";
 import { eq } from "drizzle-orm";
 import { createAuth } from "./auth";
 import { env } from "./env";
-import { authMiddleware } from "./auth/middleware";
+import { authMiddleware, authRouter } from "./auth/routing";
 import { Client as TSClient } from "typesense";
 import { TRPCContext } from "./trpc/base";
 import { eiRoutes } from "~/subrouters/eisearch";
@@ -69,6 +69,7 @@ server.use("*", async (c, next) => {
 server.use("*", authMiddleware);
 
 server.route("/ei", eiRoutes);
+server.route("/auth", authRouter);
 
 server.post("/callback/stripe", async (c) => {
   const sig = c.req.header("stripe-signature");
