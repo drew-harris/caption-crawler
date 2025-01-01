@@ -92,6 +92,7 @@ export const playlistQueueRouter = router({
         });
       }
 
+      await ctx.redis.set(`processing:${collection.id}`, "true");
       const job = await ctx.queue.add(createId("jobs"), {
         type: JobType.PLAYLIST_INGEST,
         collection,
@@ -151,5 +152,19 @@ export const playlistQueueRouter = router({
         job: job.toJSON(),
         state: job.getState(),
       };
+    }),
+
+  checkIfCollectionProcessing: publicProcedure
+    .input(
+      z.object({
+        collectionId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const jobId = ctx.redis.get(`processing:${input.collectionId}`);
+      if (!jobId) {
+        return false;
+      }
+      return true;
     }),
 });

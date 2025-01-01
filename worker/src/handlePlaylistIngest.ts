@@ -16,6 +16,8 @@ export const handlePlaylistIngest = async (
 ) => {
   const currentVideoIds = await getVideoIdsForCollection(job, deps);
 
+  logger.info({ collection: job.data }, "Handling ingest job");
+
   // Create an index on typesense if it doesn't exist already
   const searchIndex = await createIndexIfNotExist(
     job.data.collection.id,

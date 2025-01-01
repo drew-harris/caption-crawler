@@ -17,7 +17,7 @@ const pool = new Pool({
 });
 
 const db = drizzle(pool, {
-  logger: true,
+  logger: false,
 });
 
 const redis = new Redis({
