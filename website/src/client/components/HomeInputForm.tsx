@@ -25,11 +25,6 @@ export function HomeInputForm() {
     },
   );
 
-  const playlistInfoQuery = trpc.youtube.getPlaylistInfo.useQuery(
-    { playlistUrl: input },
-    { enabled: false },
-  );
-
   const utils = trpc.useUtils();
 
   function isValidUrl(str: string) {
@@ -85,7 +80,7 @@ export function HomeInputForm() {
     e.preventDefault();
     // Verify inputText is a url
     if (!input.match(/^https?:\/\//)) {
-      alert("Please enter a valid URL");
+      setError("Please enter a valid URL.");
       return;
     }
 
@@ -105,7 +100,7 @@ export function HomeInputForm() {
               e.target.value.length > 0 && !isValidUrl(e.target.value),
             );
           }}
-          placeholder="Enter a YouTube playlist URL or search for playlists..."
+          placeholder="Enter a YouTube playlist URL or search..."
           className="flex-1 overflow-hidden focus:outline-none group w-full p-[10px] pr-12 text-[14px] rounded-t-[4px] sm:rounded-l-[4px] sm:rounded-tr-none"
         />
         {isSearching && searchMutation.isLoading && (
@@ -151,6 +146,9 @@ export function HomeInputForm() {
           Scan
         </button>
       </div>
+      {error && (
+        <div className="text-red-600 opacity-80 pt-1 pl-1 text-sm">{error}</div>
+      )}
     </form>
   );
 }

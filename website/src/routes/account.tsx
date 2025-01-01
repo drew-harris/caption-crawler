@@ -31,22 +31,22 @@ function Account() {
       <h1 className="text-2xl font-bold mb-6">Account</h1>
       {!user.googleId && <GoogleLoginPromptCard />}
 
-      <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6 my-4">
-        <h2 className="text-lg font-semibold mb-4">Usage</h2>
-        <div className="mb-6">
-          <p className="text-[14px] text-gray-700">
-            Videos: {user.videoCount} / {user.videoLimit}
-          </p>
-          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-            <div
-              className="bg-strong-blue h-2 rounded-full"
-              style={{
-                width: `${Math.min((user.videoCount / user.videoLimit) * 100, 100)}%`,
-              }}
-            ></div>
-          </div>
-        </div>
-      </div>
+      {/* <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6 my-4"> */}
+      {/*   <h2 className="text-lg font-semibold mb-4">Usage</h2> */}
+      {/*   <div className="mb-6"> */}
+      {/*     <p className="text-[14px] text-gray-700"> */}
+      {/*       Videos: {user.videoCount} / {user.videoLimit} */}
+      {/*     </p> */}
+      {/*     <div className="w-full bg-gray-200 rounded-full h-2 mt-2"> */}
+      {/*       <div */}
+      {/*         className="bg-strong-blue h-2 rounded-full" */}
+      {/*         style={{ */}
+      {/*           width: `${Math.min((user.videoCount / user.videoLimit) * 100, 100)}%`, */}
+      {/*         }} */}
+      {/*       ></div> */}
+      {/*     </div> */}
+      {/*   </div> */}
+      {/* </div> */}
 
       {/* <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6"> */}
       {/*   <h2 className="text-lg font-semibold mb-4">Billing</h2> */}

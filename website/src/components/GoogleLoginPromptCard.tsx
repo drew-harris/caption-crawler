@@ -1,5 +1,3 @@
-import { Constants } from "shared";
-
 export const GoogleLoginPromptCard = () => {
   return (
     <div className="bg-white border border-tan-200 rounded-[4px] shadow-sm p-6 text-center my-4">
@@ -8,8 +6,9 @@ export const GoogleLoginPromptCard = () => {
       </h2>
 
       <p className="mb-4 text-balance text-gray-700">
-        Get {Constants.BONUS_GOOGLE_VIDEOS} free video scans by connecting your
-        Google account. Stay logged in across all your devices!
+        {/* Get {Constants.BONUS_GOOGLE_VIDEOS} free video scans by connecting your */}
+        {/* Google account. Stay logged in across all your devices! */}
+        Stay logged in across all your devices!
       </p>
 
       <a

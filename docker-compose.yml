@@ -1,17 +1,33 @@
-
 services:
-  website:
-    env_file: "./website/.env"
-    build:
-      context: .
-      target: website
+  postgres: 
+    image: "postgres"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "mypostgrespassword"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     ports:
-      - 3000:3000
-    depends_on:
-      - worker
+      - "5432:5432"
 
-  worker:
-    # env_file: "./worker/.env"
-    build:
-      context: .
-      target: worker
+  redis:
+    image: redis:7.4.1
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --requirepass "myredispassword"
+
+  typesense:
+    image: typesense/typesense:26.0
+    ports: 
+      - "8108:8108"
+    command: --data-dir /data --api-key mytypesensepassword --enable-cors
+    volumes:
+      - typesense-data:/data
+
+
+volumes:
+  redis-data:
+  pgdata:
+  typesense-data:

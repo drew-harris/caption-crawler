@@ -26,9 +26,14 @@ function SearchPage() {
   const [metadata] = trpc.metadata.getMetadataFromCollection.useSuspenseQuery({
     collectionId: loaderData.collectionId,
   });
-  const [collection] = trpc.collections.getCollection.useSuspenseQuery({
-    collectionId: loaderData.collectionId,
-  });
+  const [collection] = trpc.collections.getCollection.useSuspenseQuery(
+    {
+      collectionId: loaderData.collectionId,
+    },
+    {
+      refetchInterval: 2000,
+    },
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -41,7 +46,7 @@ function SearchPage() {
     },
     {
       enabled: searchQuery.length > 0,
-    }
+    },
   );
 
   return (
