@@ -1,11 +1,9 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { RouterOutput, trpc } from "~/internal/trpc";
 import { formatDistanceToNow } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchResultCard } from "~/components/SearchResultCard";
 import { Loader2 } from "lucide-react";
-
-type JobResponse = RouterOutput["playlistQueue"]["jobStatus"];
 
 export const Route = createFileRoute("/search/$collection")({
   loader: async ({ params, deps, context }) => {
@@ -27,29 +25,35 @@ function SearchPage() {
   const [metadata] = trpc.metadata.getMetadataFromCollection.useSuspenseQuery({
     collectionId: loaderData.collectionId,
   });
-  const [collection] = trpc.collections.getCollection.useSuspenseQuery(
-    {
-      collectionId: loaderData.collectionId,
-    },
-    {
-      refetchInterval: 2000,
-    },
-  );
+  const [collection, { refetch }] =
+    trpc.collections.getCollection.useSuspenseQuery(
+      {
+        collectionId: loaderData.collectionId,
+      },
+      {
+        refetchInterval: 1000,
+      },
+    );
 
-  const { data: isProcessing } = trpc.playlistQueue.checkIfCollectionProcessing.useQuery(
-    {
-      collectionId: loaderData.collectionId,
-    },
-    {
-      refetchInterval: 2000,
-    }
-  );
+  const { data: isProcessing } =
+    trpc.playlistQueue.checkIfCollectionProcessing.useQuery(
+      {
+        collectionId: loaderData.collectionId,
+      },
+      {
+        refetchInterval: 2000,
+      },
+    );
+
+  useEffect(() => {
+    refetch();
+  }, [isProcessing]);
 
   const [searchQuery, setSearchQuery] = useState("");
 
   const timeSince = formatDistanceToNow(collection.createdAt);
 
-  const { data: searchData, status } = trpc.search.search.useQuery(
+  const { data: searchData } = trpc.search.search.useQuery(
     {
       collection: loaderData.collectionId,
       query: searchQuery,
@@ -61,6 +65,7 @@ function SearchPage() {
 
   return (
     <div className="flex flex-col pt-10 items-center">
+      <div>{searchQuery}</div>
       {metadata.thumbnailUrl && (
         <div className="relative">
           <img
