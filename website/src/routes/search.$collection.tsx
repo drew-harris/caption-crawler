@@ -2,7 +2,8 @@ import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { RouterOutput, trpc } from "~/internal/trpc";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
-import { SearchResultCard } from "~/components/SearchResultCard"; // Add this import
+import { SearchResultCard } from "~/components/SearchResultCard";
+import { Loader2 } from "lucide-react";
 
 type JobResponse = RouterOutput["playlistQueue"]["jobStatus"];
 
@@ -35,6 +36,15 @@ function SearchPage() {
     },
   );
 
+  const { data: isProcessing } = trpc.playlistQueue.checkIfCollectionProcessing.useQuery(
+    {
+      collectionId: loaderData.collectionId,
+    },
+    {
+      refetchInterval: 2000,
+    }
+  );
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const timeSince = formatDistanceToNow(collection.createdAt);
@@ -52,10 +62,17 @@ function SearchPage() {
   return (
     <div className="flex flex-col pt-10 items-center">
       {metadata.thumbnailUrl && (
-        <img
-          src={metadata.thumbnailUrl}
-          className="w-[70vw] max-w-[400px] object-cover shadow-flat rounded-lg aspect-video"
-        />
+        <div className="relative">
+          <img
+            src={metadata.thumbnailUrl}
+            className="w-[70vw] max-w-[400px] object-cover shadow-flat rounded-lg aspect-video"
+          />
+          {isProcessing && (
+            <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-white animate-spin" />
+            </div>
+          )}
+        </div>
       )}
       <div className="h-5" />
       <div className="text-navy font-bold text-[20px]">{metadata.title}</div>
