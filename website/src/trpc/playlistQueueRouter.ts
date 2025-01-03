@@ -107,17 +107,18 @@ export const playlistQueueRouter = router({
 
       await ctx.redis.set(`jobwith:${collection.id}`, job.id);
 
-      // Get fresh user data after collection creation
-      const [updatedUser] = await ctx.db
-        .select()
-        .from(TB_users)
-        .where(eq(TB_users.id, ctx.user.id));
+      // NOTE: May be useful some day for limits
+      // // Get fresh user data after collection creation
+      // const [updatedUser] = await ctx.db
+      //   .select()
+      //   .from(TB_users)
+      //   .where(eq(TB_users.id, ctx.user.id));
 
       return {
         jobId: job.id,
         collection: collection,
         metadata,
-        user: updatedUser,
+        user: ctx.user,
       };
     }),
 
@@ -167,7 +168,9 @@ export const playlistQueueRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const isProcessing = await ctx.redis.get(`processing:${input.collectionId}`);
+      const isProcessing = await ctx.redis.get(
+        `processing:${input.collectionId}`,
+      );
       return isProcessing === "true";
     }),
 });

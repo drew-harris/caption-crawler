@@ -1,8 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useDebounce } from "~/hooks/useDebounce";
 import { trpc } from "~/internal/trpc";
+import { UserContext } from "../context/UserContext";
 
 export function HomeInputForm() {
   const [input, setInput] = useState("");
@@ -10,6 +11,7 @@ export function HomeInputForm() {
   const [isSearching, setIsSearching] = useState(false);
   const debouncedInput = useDebounce(input, 300);
   const navigate = useNavigate();
+  const userStuff = useContext(UserContext);
 
   const stripeCheckoutMutation =
     trpc.stripe.createCheckoutSession.useMutation();
@@ -47,6 +49,13 @@ export function HomeInputForm() {
         { collectionId: data.collection.id },
         data.collection,
       );
+      userStuff.setUser({
+        ...data.user,
+        createdAt: new Date(data.user.createdAt),
+      });
+
+      utils.collections.getAllCollections.refetch();
+
       navigate({
         to: "/search/$collection",
         params: {
