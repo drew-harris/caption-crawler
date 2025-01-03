@@ -1,9 +1,9 @@
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
-import { RouterOutput, trpc } from "~/internal/trpc";
+import { createFileRoute } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SearchResultCard } from "~/components/SearchResultCard";
-import { Loader2 } from "lucide-react";
+import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/search/$collection")({
   loader: async ({ params, deps, context }) => {
