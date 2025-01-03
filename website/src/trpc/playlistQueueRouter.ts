@@ -161,10 +161,7 @@ export const playlistQueueRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const jobId = ctx.redis.get(`processing:${input.collectionId}`);
-      if (!jobId) {
-        return false;
-      }
-      return true;
+      const isProcessing = await ctx.redis.get(`processing:${input.collectionId}`);
+      return isProcessing === "true";
     }),
 });
