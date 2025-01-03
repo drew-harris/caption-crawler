@@ -18,9 +18,6 @@ function IndexComponent() {
           Caption Crawler scans Youtube videos by their transcripts so that you
           can find the exact moment you’re looking for.
         </div>
-        <div className="mx-auto opacity-70 fixed bottom-0 left-0 right-0 text-center pb-4 text-sm w-full">
-          Support for channels and single videos coming soon.
-        </div>
       </div>
       <HomeInputForm />
     </>

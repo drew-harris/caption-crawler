@@ -87,6 +87,7 @@ export const handlePlaylistIngest = async (
 
   // Delete the redis key
   await deps.redis.del(`jobwith:${job.data.collection.id}`);
+  await deps.redis.del(`processing:${job.data.collection.id}`);
 
   logger.info(
     { amount: handleVideoResults.filter((r) => r.result === "error").length },
