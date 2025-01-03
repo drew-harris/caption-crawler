@@ -67,5 +67,19 @@ async function render() {
     context,
   });
 
+  // Subscribe to user updates from trpc
+  trpcClient.createSubscription({
+    onData(data) {
+      if (data.user) {
+        router.update({
+          context: {
+            ...context,
+            user: data.user,
+          },
+        });
+      }
+    },
+  });
+
   hydrateRoot(document, <RouterProvider router={router} />);
 }

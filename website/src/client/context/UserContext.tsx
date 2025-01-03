@@ -1,7 +1,13 @@
-import { ReactNode, createContext } from "react";
+import { ReactNode, createContext, useState } from "react";
 import { User } from "~/global";
 
-export const UserContext = createContext<User | null>(null);
+interface UserContextType {
+  user: User | null;
+  setUser: (user: User | null) => void;
+}
+
+export const UserContext = createContext<UserContextType>({ user: null, setUser: () => {} });
+
 export const UserContextProvider = ({
   initialUser,
   children,
@@ -9,7 +15,9 @@ export const UserContextProvider = ({
   initialUser: User | null;
   children: ReactNode;
 }) => {
+  const [user, setUser] = useState<User | null>(initialUser);
+  
   return (
-    <UserContext.Provider value={initialUser}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>
   );
 };

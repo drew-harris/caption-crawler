@@ -107,11 +107,17 @@ export const playlistQueueRouter = router({
 
       await ctx.redis.set(`jobwith:${collection.id}`, job.id);
 
+      // Get fresh user data after collection creation
+      const [updatedUser] = await ctx.db
+        .select()
+        .from(TB_users)
+        .where(eq(TB_users.id, ctx.user.id));
+
       return {
         jobId: job.id,
         collection: collection,
         metadata,
-        user: ctx.user,
+        user: updatedUser,
       };
     }),
 
