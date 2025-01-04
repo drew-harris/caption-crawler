@@ -6,7 +6,7 @@ import { SearchResultCard } from "~/components/SearchResultCard";
 import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/search/$collection")({
-  loader: async ({ params, deps, context }) => {
+  loader: async ({ params, context }) => {
     await context.trpc.metadata.getMetadataFromCollection.ensureData({
       collectionId: params.collection,
     });
@@ -80,7 +80,9 @@ function SearchPage() {
         </div>
       )}
       <div className="h-5" />
-      <div className="text-navy font-bold text-[20px]">{metadata.title}</div>
+      <div className="text-navy text-center text-balance font-bold text-[20px]">
+        {metadata.title}
+      </div>
       <div className="font-medium text-[13px] opacity-50">
         Last updated: {timeSince} ago
       </div>
@@ -92,7 +94,7 @@ function SearchPage() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="p-2 border-2 border-tan-200 text-[14px] placeholder:text-[#939393] w-full max-w-[316px]"
-        placeholder="Search Transcripts..."
+        placeholder="Search Captions..."
       />
       {searchData?.hits && (
         <div className="w-full max-w-[600px] mt-4 space-y-4">

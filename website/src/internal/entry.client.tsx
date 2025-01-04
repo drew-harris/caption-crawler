@@ -6,10 +6,16 @@ import { createRouter } from "./router";
 import { createTRPCQueryUtils } from "@trpc/react-query";
 import { trpc } from "./trpc";
 import { type User } from "lucia";
+import posthog from "posthog-js";
 
 let dehydrationUser: User | undefined = undefined;
 
 void render();
+
+posthog.init("phc_pXnq6RRDXBHYlKX6lQi9VTQQYeeUUsPILGhaKZ3GPo1", {
+  api_host: "https://us.i.posthog.com",
+  person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
+});
 
 async function render() {
   const queryClient = new QueryClient();

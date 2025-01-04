@@ -32,13 +32,13 @@ function PlaylistsPage() {
                   {collection.metadata.title}
                 </h2>
                 <p className="text-sm opacity-60">
+                  {collection.metadata.channelTitle}
+                </p>
+                <p className="text-sm opacity-60">
                   Added {formatDistanceToNow(collection.createdAt)} ago
                 </p>
                 <p className="text-sm opacity-60">
                   {collection.videoCount} videos
-                </p>
-                <p className="text-sm opacity-60">
-                  by {collection.metadata.channelTitle}
                 </p>
               </div>
             </div>

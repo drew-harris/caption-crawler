@@ -148,12 +148,14 @@ export function HomeInputForm() {
           </div>
         )}
 
-        <button
-          type="submit"
-          className="bg-strong-blue hover:bg-strong-blue/95 px-[31.5px] py-2 sm:py-0 text-white rounded-b-[4px] sm:rounded-l-none sm:rounded-r-[4px]"
-        >
-          Scan
-        </button>
+        {!searchMutation.data && (
+          <button
+            type="submit"
+            className="bg-strong-blue hover:bg-strong-blue/95 px-[31.5px] py-2 sm:py-0 text-white rounded-b-[4px] sm:rounded-l-none sm:rounded-r-[4px]"
+          >
+            Scan
+          </button>
+        )}
       </div>
       {error && (
         <div className="text-red-600 opacity-80 pt-1 pl-1 text-sm">{error}</div>

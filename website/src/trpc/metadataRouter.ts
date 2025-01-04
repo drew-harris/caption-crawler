@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { TB_collections, TB_metadata } from "db";
 import { eq, getTableColumns } from "drizzle-orm";
-import { getPlaylistDisplayInfo, getPlaylistIdFromUrl } from "shared/yt";
+import { getPlaylistIdFromUrl } from "shared/yt";
 import { z } from "zod";
 import { env } from "~/env";
 import { getPlaylistMetadata } from "~/serverUtils/metadata";
