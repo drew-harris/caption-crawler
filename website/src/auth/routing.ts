@@ -106,6 +106,7 @@ authRouter.get("/callback/google", async (c) => {
       // Create new user
       user = await createUserWithCookie(c.var.db, c.var.auth, c);
     }
+
     // Update user with Google info
     // Create session for existing user
     await c.var.db
@@ -118,7 +119,6 @@ authRouter.get("/callback/google", async (c) => {
     const session = await c.var.auth.createSession(user.id, {});
     const sessionCookie = c.var.auth.createSessionCookie(session.id);
     setCookie(c, c.var.auth.sessionCookieName, sessionCookie.serialize());
-
     return c.redirect("/");
   } catch (e) {
     logger.error("Error in Google callback", e);

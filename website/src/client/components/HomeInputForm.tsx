@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useDebounce } from "~/hooks/useDebounce";
 import { trpc } from "~/internal/trpc";
 import { UserContext } from "../context/UserContext";
+import posthog from "posthog-js";
 
 export function HomeInputForm() {
   const [input, setInput] = useState("");
@@ -39,6 +40,11 @@ export function HomeInputForm() {
   }
 
   const submitPlaylistMutation = trpc.playlistQueue.queuePlaylist.useMutation({
+    onMutate(data) {
+      posthog.capture("playlist_submit", {
+        url: data.url,
+      });
+    },
     onSuccess(data, variables, context) {
       // Preset the required metadata
       utils.metadata.getMetadataFromCollection.setData(

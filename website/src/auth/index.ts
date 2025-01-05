@@ -42,5 +42,5 @@ interface DatabaseUserAttributes {
 export const google = new Google(
   env.GOOGLE_CLIENT_ID,
   env.GOOGLE_CLIENT_SECRET,
-  `${env.PUBLIC_URL}/callback/google`,
+  `${env.PUBLIC_URL}/auth/callback/google`,
 );
