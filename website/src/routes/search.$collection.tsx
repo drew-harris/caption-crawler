@@ -3,6 +3,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SearchResultCard } from "~/components/SearchResultCard";
+import { useDebounce } from "~/hooks/useDebounce";
 import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/search/$collection")({
@@ -50,13 +51,14 @@ function SearchPage() {
   }, [isProcessing]);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedQuery = useDebounce(searchQuery, 300);
 
   const timeSince = formatDistanceToNow(collection.createdAt);
 
   const { data: searchData } = trpc.search.search.useQuery(
     {
       collection: loaderData.collectionId,
-      query: searchQuery,
+      query: debouncedQuery,
     },
     {
       enabled: searchQuery.length > 0,

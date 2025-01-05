@@ -2,6 +2,7 @@ import { TypesenseMoment } from "shared/types";
 import { SearchResponse } from "typesense/lib/Typesense/Documents";
 import { MultiSearchResponse } from "typesense/lib/Typesense/MultiSearch";
 import { z } from "zod";
+import { logger } from "~/logging";
 import { publicProcedure, router } from "~/trpc/base";
 
 export const searchRouter = router({
@@ -13,6 +14,15 @@ export const searchRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
+      if (input.query === "") {
+        return [];
+      }
+      logger.info(
+        {
+          input,
+        },
+        "Doing Search",
+      );
       const results = (await ctx.typesense
         .collections(input.collection)
         .documents()
