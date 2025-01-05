@@ -54,6 +54,7 @@ const redis = new Redis({
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 server.use("/assets/*", serveStatic({ root: "./dist/public" }));
+server.use("/favicon.ico", serveStatic({ path: "./dist/public/favicon.ico" }));
 
 server.use("*", async (c, next) => {
   c.set("db", db);

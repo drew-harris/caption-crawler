@@ -44,6 +44,9 @@ export const createRouter = (
         </QueryClientProvider>
       );
     },
+    defaultNotFoundComponent: ({ notFound }: any) => {
+      return <div>Not found: {notFound}</div>;
+    },
   });
 };
 

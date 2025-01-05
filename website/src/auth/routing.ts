@@ -62,18 +62,22 @@ authRouter.get("/login/google", async (c) => {
     sameSite: "Lax",
   });
 
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: url.toString(),
-    },
-  });
+  return c.redirect(url.toString(), 302);
+  // return new Response(null, {
+  //   status: 302,
+  //   headers: {
+  //     Location: url.toString(),
+  //   },
+  // });
 });
 
 authRouter.get("/callback/google", async (c) => {
   const { code, state } = c.req.query();
+  console.log("CODE: ", code);
   const storedState = getCookie(c, "google_oauth_state");
   const codeVerifier = getCookie(c, "google_code_verifier");
+  console.log("STORED STATE: ", storedState);
+  console.log("CODE VERIFIER: ", codeVerifier);
 
   if (!code || !state || !storedState || !codeVerifier) {
     return c.text("Invalid request", 400);
@@ -85,16 +89,18 @@ authRouter.get("/callback/google", async (c) => {
 
   try {
     const tokens = await google.validateAuthorizationCode(code, codeVerifier);
-    const idToken = tokens.idToken;
-    if (!idToken()) {
+    console.log("GOT TOKENS");
+    const idToken = tokens.idToken();
+    if (!idToken) {
       return c.text("Invalid ID token", 400);
     }
 
-    const claims = decodeIdToken(idToken()) as {
+    const claims = decodeIdToken(idToken) as {
       sub: string;
       name: string;
     };
     const googleUserId = claims.sub;
+    logger.info({ googleUserId }, "Google user id");
 
     let user = await c.var.db
       .select()
@@ -121,6 +127,7 @@ authRouter.get("/callback/google", async (c) => {
     setCookie(c, c.var.auth.sessionCookieName, sessionCookie.serialize());
     return c.redirect("/");
   } catch (e) {
+    console.error(e);
     logger.error("Error in Google callback", e);
     return c.text("Authentication failed", 400);
   }
