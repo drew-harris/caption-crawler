@@ -83,3 +83,28 @@ export const TB_videos = pgTable(
     };
   },
 );
+export const TB_Ownership = pgTable(
+  "ownership",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => TB_users.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    collectionId: text("collection_id")
+      .notNull()
+      .references(() => TB_collections.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull(),
+  },
+  (table) => ({
+    userCollectionIdx: unique("user_collection_idx").on(
+      table.userId,
+      table.collectionId,
+    ),
+  }),
+);

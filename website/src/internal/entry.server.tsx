@@ -12,6 +12,7 @@ import { createTRPCQueryUtils } from "@trpc/react-query";
 import { trpc } from "~/internal/trpc";
 import { appRouter } from "~/trpc/app";
 import { Env } from "hono";
+import { logger } from "~/logging";
 
 export async function render(req: Request, context: Env["Variables"]) {
   const assets = await assetsForRequest(req.url);
@@ -47,6 +48,7 @@ export async function render(req: Request, context: Env["Variables"]) {
                 observer.complete();
               })
               .catch((cause: TRPCErrorResponse) => {
+                logger.error(cause, "TRPC Error");
                 observer.error(TRPCClientError.from(cause));
               });
           }),

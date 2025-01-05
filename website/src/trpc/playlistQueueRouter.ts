@@ -5,9 +5,9 @@ import { env } from "../env";
 import { createId } from "shared";
 import { JobType, PlaylistIngestJob } from "shared/types";
 import { getPlaylistMetadata } from "~/serverUtils/metadata";
-import { TB_collections } from "db";
+import { TB_collections, TB_Ownership } from "db";
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { logger } from "~/logging";
 
 export const playlistQueueRouter = router({
@@ -56,6 +56,25 @@ export const playlistQueueRouter = router({
           { playlistId },
           "Found existing playlist during submission",
         );
+
+        // Assign ownership if not already owned
+
+        await ctx.db
+          .insert(TB_Ownership)
+          .values({
+            id: createId("ownership"),
+            collectionId: possibleCollection.id,
+            userId: ctx.user.id,
+            createdAt: new Date(),
+          })
+          .onConflictDoUpdate({
+            target: [TB_Ownership.userId, TB_Ownership.collectionId],
+            set: {
+              userId: ctx.user.id,
+              createdAt: new Date(),
+            },
+          });
+
         const job = await ctx.queue.add(createId("jobs"), {
           type: JobType.PLAYLIST_INGEST,
           collection: possibleCollection,
@@ -91,6 +110,22 @@ export const playlistQueueRouter = router({
           message: "Could not create collection",
         });
       }
+
+      await ctx.db
+        .insert(TB_Ownership)
+        .values({
+          id: createId("ownership"),
+          collectionId: collection.id,
+          userId: ctx.user.id,
+          createdAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: [TB_Ownership.userId, TB_Ownership.collectionId],
+          set: {
+            userId: ctx.user.id,
+            createdAt: new Date(),
+          },
+        });
 
       await ctx.redis.set(`processing:${collection.id}`, "true");
       const job = await ctx.queue.add(createId("jobs"), {

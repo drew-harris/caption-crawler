@@ -1,4 +1,14 @@
+let db = $env.DATABASE_URL
+def sql [query: string] {
+    psql $db --csv -c $query | from csv
+}
+
 ###
+
+print $db
+
+#@ get collections
+sql "select * from collections"
 
 #@ typesense health check
 http get http://localhost:8108/health
