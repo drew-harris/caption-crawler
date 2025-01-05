@@ -14,9 +14,6 @@ export const searchRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      if (input.query === "") {
-        return [];
-      }
       logger.info(
         {
           input,

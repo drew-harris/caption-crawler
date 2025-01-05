@@ -61,7 +61,7 @@ function SearchPage() {
       query: debouncedQuery,
     },
     {
-      enabled: searchQuery.length > 0,
+      enabled: debouncedQuery.length > 0,
     },
   );
 
