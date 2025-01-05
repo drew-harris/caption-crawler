@@ -108,3 +108,10 @@ export const TB_Ownership = pgTable(
     ),
   }),
 );
+
+export const TB_Feedback = pgTable("feedback", {
+  id: text("id").primaryKey(),
+  feedback: text("feedback").notNull(),
+  submittedAt: timestamp("submitted_at", { mode: "date" }).notNull(),
+  userId: text("user_id"),
+});

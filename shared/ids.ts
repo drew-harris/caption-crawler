@@ -10,6 +10,7 @@ const prefixes = {
   content: "c",
   video: "v",
   ownership: "o",
+  feedback: "fb",
 } as const;
 
 export function createId(prefix: keyof typeof prefixes): string {

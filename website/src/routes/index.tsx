@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FormEvent, useState } from "react";
 import { HomeInputForm } from "~/client/components/HomeInputForm";
-import { trpc } from "~/internal/trpc";
 
 export const Route = createFileRoute("/")({
   component: IndexComponent,
@@ -20,9 +18,6 @@ function IndexComponent() {
         </div>
       </div>
       <HomeInputForm />
-      <div className="mx-auto fixed bottom-0 left-0 right-0 text-xs opacity-70 pb-4 text-center md:text-sm w-full">
-        Support for entire channels and single videos coming soon!
-      </div>
     </>
   );
 }

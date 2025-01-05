@@ -15,6 +15,7 @@ import { Route as StopPurchaseImport } from './../routes/stop-purchase'
 import { Route as PlaylistsImport } from './../routes/playlists'
 import { Route as AccountImport } from './../routes/account'
 import { Route as IndexImport } from './../routes/index'
+import { Route as FeedbackIndexImport } from './../routes/feedback.index'
 import { Route as AdminIndexImport } from './../routes/admin.index'
 import { Route as SearchCollectionImport } from './../routes/search.$collection'
 
@@ -37,6 +38,11 @@ const AccountRoute = AccountImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FeedbackIndexRoute = FeedbackIndexImport.update({
+  path: '/feedback/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -96,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof rootRoute
     }
+    '/feedback/': {
+      id: '/feedback/'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -108,6 +121,7 @@ export const routeTree = rootRoute.addChildren({
   StopPurchaseRoute,
   SearchCollectionRoute,
   AdminIndexRoute,
+  FeedbackIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -123,7 +137,8 @@ export const routeTree = rootRoute.addChildren({
         "/playlists",
         "/stop-purchase",
         "/search/$collection",
-        "/admin/"
+        "/admin/",
+        "/feedback/"
       ]
     },
     "/": {
@@ -143,6 +158,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/admin/": {
       "filePath": "admin.index.tsx"
+    },
+    "/feedback/": {
+      "filePath": "feedback.index.tsx"
     }
   }
 }

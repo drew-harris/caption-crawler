@@ -9,6 +9,12 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <Navbar />
         <Outlet />
       </div>
+      <Link
+        to={"/feedback"}
+        className="mx-auto text-xs opacity-70 text-center md:text-sm w-full"
+      >
+        Submit Feedback
+      </Link>
     </div>
   );
 };

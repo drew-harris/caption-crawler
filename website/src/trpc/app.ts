@@ -7,6 +7,7 @@ import { metadataRouter } from "~/trpc/metadataRouter";
 import { collectionRouter } from "~/trpc/collectionRouter";
 import { searchRouter } from "~/trpc/searchRouter";
 import { stripeRouter } from "./stripeRouter";
+import { feedbackRouter } from "./feedbackRouter";
 
 export const appRouter = router({
   playlistQueue: playlistQueueRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   users: authRouter,
   admin: adminRouter,
   stripe: stripeRouter,
+  feedback: feedbackRouter,
 });
 // Export type router type signature,
 // NOT the router itself.
