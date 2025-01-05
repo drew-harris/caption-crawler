@@ -85,10 +85,6 @@ export const handlePlaylistIngest = async (
     })
     .where(eq(TB_collections.id, job.data.collection.id));
 
-  // Delete the redis key
-  await deps.redis.del(`jobwith:${job.data.collection.id}`);
-  await deps.redis.del(`processing:${job.data.collection.id}`);
-
   logger.info(
     { amount: handleVideoResults.filter((r) => r.result === "error").length },
     "Errors processing videos videos",

@@ -65,7 +65,6 @@ function SearchPage() {
 
   return (
     <div className="flex flex-col pt-10 items-center">
-      <div>{searchQuery}</div>
       {metadata.thumbnailUrl && (
         <div className="relative">
           <img

@@ -8,7 +8,7 @@ import { getPlaylistMetadata } from "~/serverUtils/metadata";
 import { TB_collections, TB_Ownership } from "db";
 import { TRPCError } from "@trpc/server";
 import { and, eq, sql } from "drizzle-orm";
-import { logger } from "~/logging";
+import { alertPlaylistSubmission, logger } from "~/logging";
 
 export const playlistQueueRouter = router({
   testAutoUser: autoUserProcedure.mutation(async () => {
@@ -148,6 +148,16 @@ export const playlistQueueRouter = router({
       //   .select()
       //   .from(TB_users)
       //   .where(eq(TB_users.id, ctx.user.id));
+
+      if (!env["PUBLIC_URL"].includes("localhost")) {
+        await alertPlaylistSubmission({
+          title: metadata.title,
+          description: metadata.description || "(No description)",
+          userId: ctx.user.id,
+          playlistUrl: input.url,
+          imageUrl: metadata.thumbnailUrl,
+        });
+      }
 
       return {
         jobId: job.id,

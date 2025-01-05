@@ -54,13 +54,20 @@ const playlistIngestWorker = new Worker<PossibleJob>(
       switch (job.data.type) {
         case JobType.PLAYLIST_INGEST:
           logger.info("Handling playlist ingest");
-          return handlePlaylistIngest(job as Job<PlaylistIngestJob>, deps);
+          const result = handlePlaylistIngest(
+            job as Job<PlaylistIngestJob>,
+            deps,
+          );
+          return result;
         default:
           throw new Error("Invalid job type");
       }
     } catch (err) {
       logger.error(err);
       throw err;
+    } finally {
+      await deps.redis.del(`processing:${job.data.collection.id}`);
+      await deps.redis.del(`jobwith:${job.data.collection.id}`);
     }
   },
   {
