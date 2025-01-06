@@ -2,7 +2,7 @@ import { Job } from "bullmq";
 import { TB_collections, TB_videos } from "db";
 import { PlaylistIngestJob } from "shared/types";
 import { Deps } from ".";
-import { getVideosFromYoutube } from "./captions";
+import { getVideosFromPlaylist } from "./captions";
 import { getVideoIdsForCollection } from "./getVideoIdsFromCollection";
 import { createIndexIfNotExist } from "./searching";
 import { HandleVideoInput, handleVideo } from "./videos";
@@ -24,7 +24,9 @@ export const handlePlaylistIngest = async (
     deps.typesense,
   );
 
-  let youtubeVideos = await getVideosFromYoutube(job.data.collection.youtubeId);
+  let youtubeVideos = await getVideosFromPlaylist(
+    job.data.collection.youtubeId,
+  );
 
   logger.info({ amount: youtubeVideos.length }, "Got videos from youtube");
 

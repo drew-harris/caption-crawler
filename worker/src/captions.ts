@@ -5,7 +5,7 @@ export function base64Encode(str: string) {
   return Buffer.from(str, "utf-8").toString("base64");
 }
 
-export async function getVideosFromYoutube(
+export async function getVideosFromPlaylist(
   playlistId: string,
 ): Promise<youtube_v3.Schema$PlaylistItem[]> {
   // Get the playlist id

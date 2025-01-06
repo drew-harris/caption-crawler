@@ -1,10 +1,14 @@
 import { z } from "zod";
 import { autoUserProcedure, publicProcedure, router } from "./base";
-import { getPlaylistIdFromUrl } from "shared/yt";
+import { getChannelHandleFromUrl, getPlaylistIdFromUrl } from "shared/yt";
 import { env } from "../env";
 import { createId } from "shared";
 import { JobType, PlaylistIngestJob } from "shared/types";
-import { getPlaylistMetadata } from "~/serverUtils/metadata";
+import {
+  getChannelMetadata,
+  getPlaylistMetadata,
+  Metadata,
+} from "~/serverUtils/metadata";
 import { TB_collections, TB_Ownership } from "db";
 import { TRPCError } from "@trpc/server";
 import { and, eq, sql } from "drizzle-orm";
@@ -26,18 +30,48 @@ export const playlistQueueRouter = router({
     return null;
   }),
 
-  queuePlaylist: autoUserProcedure
+  queueCollection: autoUserProcedure
     .input(z.object({ url: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // TODO: Check if video count is within limits
 
       logger.info({ url: input.url }, "Queueing playlist");
+      let type: "playlist" | "channel" = "playlist";
+      let id: string | null = null;
+      let metadata: Metadata | null = null;
+
       const playlistId = getPlaylistIdFromUrl(input.url);
-      const metadata = await getPlaylistMetadata({
-        db: ctx.db,
-        playlistId,
-        youtubeKey: env.YOUTUBE_API_KEY,
-      });
+
+      // If query param not found try to find channel id
+      if (playlistId) {
+        type = "playlist";
+        id = playlistId;
+        metadata = await getPlaylistMetadata({
+          db: ctx.db,
+          playlistId,
+          youtubeKey: env.YOUTUBE_API_KEY,
+        });
+      } else {
+        type = "channel";
+        id = getChannelHandleFromUrl(input.url);
+        if (!id) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Could not find information for that URL",
+          });
+        }
+        metadata = await getChannelMetadata({
+          db: ctx.db,
+          channelHandle: id,
+          youtubeKey: env.YOUTUBE_API_KEY,
+        });
+
+        logger.info(
+          { playlistId, channelHandle: id, metadata },
+          "Got playlist metadata",
+        );
+        throw new Error("Got here");
+      }
 
       // Check if theres already a playlist
       const [possibleCollection] = await ctx.db
@@ -47,7 +81,7 @@ export const playlistQueueRouter = router({
           and(
             eq(TB_collections.createdBy, ctx.user.id),
             eq(TB_collections.semantic, false),
-            eq(TB_collections.youtubeId, playlistId),
+            eq(TB_collections.youtubeId, id),
           ),
         );
 

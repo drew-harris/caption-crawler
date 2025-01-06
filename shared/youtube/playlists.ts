@@ -5,9 +5,26 @@ export const getPlaylistIdFromUrl = (url: string) => {
   const playlistUrl = new URLSearchParams(url.split("?")[1]);
   const playlistId = playlistUrl.get("list");
   if (!playlistId) {
-    throw new Error("Could not get playlist id from url");
+    return null;
   }
   return playlistId;
+};
+
+export const getChannelHandleFromUrl = (url: string): string | null => {
+  try {
+    // Remove trailing slashes and any additional path segments
+    const cleanUrl = url.split("/")[3];
+
+    // Check if the URL contains a channel handle (starts with @)
+    if (cleanUrl && cleanUrl.startsWith("@")) {
+      // Return the handle including the @ symbol
+      return cleanUrl;
+    }
+
+    return null;
+  } catch (error) {
+    return null;
+  }
 };
 
 export const getPlaylistDisplayInfo = async (

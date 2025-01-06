@@ -39,57 +39,59 @@ export function HomeInputForm() {
     }
   }
 
-  const submitPlaylistMutation = trpc.playlistQueue.queuePlaylist.useMutation({
-    onMutate(data) {
-      posthog.capture("playlist_submit", {
-        url: data.url,
-      });
-    },
-    onSuccess(data, variables, context) {
-      // Preset the required metadata
-      utils.metadata.getMetadataFromCollection.setData(
-        { collectionId: data.collection.id },
-        data.metadata,
-      );
-      utils.collections.getCollection.setData(
-        { collectionId: data.collection.id },
-        data.collection,
-      );
-      userStuff.setUser({
-        ...data.user,
-        createdAt: new Date(data.user.createdAt),
-      });
+  const submitPlaylistMutation = trpc.playlistQueue.queueCollection.useMutation(
+    {
+      onMutate(data) {
+        posthog.capture("playlist_submit", {
+          url: data.url,
+        });
+      },
+      onSuccess(data, variables, context) {
+        // Preset the required metadata
+        utils.metadata.getMetadataFromCollection.setData(
+          { collectionId: data.collection.id },
+          data.metadata,
+        );
+        utils.collections.getCollection.setData(
+          { collectionId: data.collection.id },
+          data.collection,
+        );
+        userStuff.setUser({
+          ...data.user,
+          createdAt: new Date(data.user.createdAt),
+        });
 
-      utils.collections.getAllCollections.refetch();
+        utils.collections.getAllCollections.refetch();
 
-      navigate({
-        to: "/search/$collection",
-        params: {
-          collection: data.collection.id,
-        },
-        search: {
-          j: data.jobId,
-        },
-      });
-    },
-    onError(error, variables, context) {
-      if (error.message.includes("playlist limit")) {
-        if (
-          confirm(
-            "You've reached your playlist limit. Would you like to upgrade to add more playlists?",
-          )
-        ) {
-          stripeCheckoutMutation.mutate(undefined, {
-            onSuccess: ({ url }) => {
-              if (url) window.location.href = url;
-            },
-          });
+        navigate({
+          to: "/search/$collection",
+          params: {
+            collection: data.collection.id,
+          },
+          search: {
+            j: data.jobId,
+          },
+        });
+      },
+      onError(error, variables, context) {
+        if (error.message.includes("playlist limit")) {
+          if (
+            confirm(
+              "You've reached your playlist limit. Would you like to upgrade to add more playlists?",
+            )
+          ) {
+            stripeCheckoutMutation.mutate(undefined, {
+              onSuccess: ({ url }) => {
+                if (url) window.location.href = url;
+              },
+            });
+          }
+        } else {
+          setError(error.message || "Something went wrong");
         }
-      } else {
-        setError(error.message || "Something went wrong");
-      }
+      },
     },
-  });
+  );
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
