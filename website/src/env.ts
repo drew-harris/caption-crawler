@@ -17,7 +17,7 @@ export const env = createEnv({
     PUBLIC_URL: z.string().url(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
-    DISCORD_WEBHOOK: z.string(),
+    DISCORD_WEBHOOK_URL: z.string().url(),
   },
 
   runtimeEnv: process.env,

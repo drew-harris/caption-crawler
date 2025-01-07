@@ -2,7 +2,7 @@ import pino from "pino";
 export const logger = pino();
 import { env } from "./env";
 
-const webhookUrl = env.DISCORD_WEBHOOK;
+const webhookUrl = env.DISCORD_WEBHOOK_URL;
 
 interface PlaylistSubmission {
   title: string;
