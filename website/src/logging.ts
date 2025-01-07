@@ -1,8 +1,8 @@
 import pino from "pino";
 export const logger = pino();
+import { env } from "./env";
 
-// const webhookUrl =
-//   "https://discord.com/api/webhooks/1325286633951465472/pViFVoks6tFFM2pm3vcK2W5JSZY0OeE77P60vASgD2Mam6K59FQmQpOfwWhGgelsIB6M";
+const webhookUrl = env.DISCORD_WEBHOOK_URL;
 
 interface PlaylistSubmission {
   title: string;
@@ -15,7 +15,6 @@ interface PlaylistSubmission {
 export async function alertPlaylistSubmission(
   submission: PlaylistSubmission,
 ): Promise<void> {
-  return;
   try {
     const payload = {
       embeds: [
