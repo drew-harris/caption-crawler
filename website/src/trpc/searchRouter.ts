@@ -3,10 +3,10 @@ import { SearchResponse } from "typesense/lib/Typesense/Documents";
 import { MultiSearchResponse } from "typesense/lib/Typesense/MultiSearch";
 import { z } from "zod";
 import { logger } from "~/logging";
-import { publicProcedure, router } from "~/trpc/base";
+import { autoUserProcedure, publicProcedure, router } from "~/trpc/base";
 
 export const searchRouter = router({
-  search: publicProcedure
+  search: autoUserProcedure
     .input(
       z.object({
         query: z.string(),
@@ -16,7 +16,9 @@ export const searchRouter = router({
     .query(async ({ ctx, input }) => {
       logger.info(
         {
-          input,
+          query: input.query,
+          collection: input.collection,
+          user: ctx.user.id,
         },
         "Doing Search",
       );
