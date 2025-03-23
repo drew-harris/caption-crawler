@@ -24,6 +24,13 @@ export const Route = createRootRouteWithContext<RootRouterContext>()({
   loader: (ctx) => {
     return ctx.context.user || null;
   },
+  scripts: () => [
+    <script
+      defer
+      data-domain="captioncrawler.com"
+      src="https://analytics.drewh.cloud/js/script.hash.outbound-links.pageview-props.tagged-events.js"
+    ></script>,
+  ],
 });
 
 function RootComponent() {
