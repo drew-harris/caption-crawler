@@ -17,6 +17,7 @@ import jsesc from "jsesc";
 import type { RootRouterContext } from "../internal/router";
 import { Layout } from "~/client/Layout";
 import { UserContextProvider } from "~/client/context/UserContext";
+import { useEffect } from "react";
 
 export const Route = createRootRouteWithContext<RootRouterContext>()({
   component: RootComponent,
@@ -24,19 +25,25 @@ export const Route = createRootRouteWithContext<RootRouterContext>()({
   loader: (ctx) => {
     return ctx.context.user || null;
   },
-  scripts: () => [
-    <script
-      defer
-      data-domain="captioncrawler.com"
-      src="https://analytics.drewh.cloud/js/script.hash.outbound-links.pageview-props.tagged-events.js"
-    ></script>,
-  ],
 });
 
 function RootComponent() {
   const router = useRouter();
   const { bodyTags, headTags } = router.options.context;
   const user = useLoaderData({ from: "__root__" });
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.defer = true;
+    script.setAttribute("data-domain", "captioncrawler.com");
+    script.src =
+      "https://analytics.drewh.cloud/js/script.hash.outbound-links.pageview-props.tagged-events.js";
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   return (
     <html lang="en">
