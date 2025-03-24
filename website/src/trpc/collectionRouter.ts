@@ -1,4 +1,4 @@
-import { TB_collections, TB_metadata } from "db";
+import { TB_collections, TB_metadata, TB_Ownership } from "db";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { publicProcedure, router, autoUserProcedure } from "~/trpc/base";
@@ -21,9 +21,13 @@ export const collectionRouter = router({
           channelTitle: TB_metadata.channelTitle,
         },
       })
-      .from(TB_collections)
+      .from(TB_Ownership)
+      .innerJoin(
+        TB_collections,
+        eq(TB_Ownership.collectionId, TB_collections.id),
+      )
       .innerJoin(TB_metadata, eq(TB_collections.youtubeId, TB_metadata.id))
-      .where(eq(TB_collections.createdBy, ctx.user.id));
+      .where(eq(TB_Ownership.userId, ctx.user.id));
     return collections;
   }),
   getCollection: publicProcedure

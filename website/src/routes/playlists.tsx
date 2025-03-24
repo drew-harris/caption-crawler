@@ -5,6 +5,9 @@ import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/playlists")({
   component: PlaylistsPage,
+  loader: async ({ context }) => {
+    await context.trpc.collections.getAllCollections.ensureData();
+  },
 });
 
 function PlaylistsPage() {
